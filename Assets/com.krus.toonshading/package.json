@@ -1,0 +1,25 @@
+{
+  "name": "com.krus.toonshading",
+  "description": "Toon shading HLSL library for unity URP",
+  "version": "1.0.0",
+  "unity": "2022.2.12f1",
+  "displayName": "K_URP_ToonShading",
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "14.0.6"
+  },
+  "keywords": [
+    "graphics",
+    "performance",
+    "rendering",
+    "mobile",
+    "render",
+    "pipeline"
+  ],
+  "samples": [
+    {
+      "displayName": "K_URP_Toonshading Package Samples",
+      "description": "Character toon shading",
+      "path": "Samples~/KURPToonShadingPackageSamples"
+    }
+  ]
+}
