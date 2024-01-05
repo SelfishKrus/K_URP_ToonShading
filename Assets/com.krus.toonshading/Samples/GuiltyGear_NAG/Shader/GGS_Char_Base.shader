@@ -4,8 +4,8 @@ Shader "Arc/GGS_Char_SimpleBase"
     Properties
     {
         _MainTex ("BaseTex", 2D) = "white" {}
-        _ILMTex("ILMTex",2D) = "white"{}
-        _SssTex("SssTex",2D) = "white"{}
+        _ILMTex("ILMTex",2D) = "black"{}
+        _SssTex("SssTex",2D) = "black"{}
         _DetailTex("DetailTex",2D) = "white"{}
     }
     SubShader

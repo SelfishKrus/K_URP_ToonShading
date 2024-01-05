@@ -40,6 +40,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 5dd3ce7c2d6b4f7499555ea6b788a8bf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BaseTex:
+        m_Texture: {fileID: 2800000, guid: 5dd3ce7c2d6b4f7499555ea6b788a8bf, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -56,8 +60,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DetailTex:
+        m_Texture: {fileID: 2800000, guid: ed876425d4d419044bb3f6316c98ca39, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _IlmTex:
+        m_Texture: {fileID: 2800000, guid: 0bcf881dd1ec80c45ab75e516b7c66e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -74,6 +86,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SSSTex:
+        m_Texture: {fileID: 2800000, guid: cae494e0d0d4f20469c47d7e68b6a8c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -113,10 +129,12 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.01
+    - _OutlineOffset: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _ShadowSmoothness: 0
+    - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -131,4 +149,5 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Test: {r: 0.21, g: 0.12, b: 0, a: 0}
   m_BuildTextureStacks: []
