@@ -161,5 +161,5 @@ Material:
     - _RimSpecularCol_Dark: {r: 1, g: 0.5254902, b: 0.6007628, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularCol: {r: 1, g: 1, b: 1, a: 1}
-    - _Test: {r: 1.04, g: 1.42, b: -3.6, a: 0}
+    - _Test: {r: 1, g: 1.42, b: -3.6, a: 0}
   m_BuildTextureStacks: []

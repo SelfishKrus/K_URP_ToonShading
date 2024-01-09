@@ -174,7 +174,7 @@ Shader "Krus/ToonShading"
                 o.pos = TransformObjectToHClip(v.posOS.xyz);
                 o.uv.xy = v.uv0;
                 o.uv.zw = v.uv1;
-                o.normalWS = TransformObjectToWorldDir(v.normalOS);
+                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.posWS = TransformObjectToWorld(v.posOS.xyz);
                 o.shadowCoord = TransformWorldToShadowCoord(o.posWS);
                 o.tangentWS = TransformObjectToWorldDir(v.tangentOS);
@@ -258,6 +258,8 @@ Shader "Krus/ToonShading"
                 
                 col *= outline;
                 // col = rimSpecular;
+                col = ilmTex.a;
+                
                 return half4(col, 1);
             }
             ENDHLSL
