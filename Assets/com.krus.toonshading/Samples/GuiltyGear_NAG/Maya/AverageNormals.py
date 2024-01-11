@@ -20,9 +20,28 @@ if result == "OK":
     selectModels = cmds.ls(sl=True, l=True)
     selectList = om.MGlobal.getActiveSelectionList()
     
+    # each object
     for index, model in enumerate(selectModels):
         dagPath = selectList.getDagPath(index)
         fnMesh = om.MFnMesh(dagPath)
-        # print type
-        print(type(fnMesh))
-    
+
+        # each object
+        # normals array
+        normals = fnMesh.getNormals()
+        
+        averageNormal = om.MFloatVector()
+
+        # each vertex
+        # smooth normal of each vertex
+        itVerts = om.MItMeshVertex(dagPath)
+        while not itVerts.isDone():
+
+            # normal index array related to each vertex
+            normalIndices = itVerts.getNormalIndices()
+            for normalIndex in normalIndices:
+                averageNormal += normals[normalIndex]
+            averageNormal.normalize()
+
+            itVerts.next()
+
+            # construct TNB matrix
