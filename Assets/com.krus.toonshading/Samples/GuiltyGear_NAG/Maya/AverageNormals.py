@@ -1,5 +1,5 @@
 import maya.cmds as cmds
-from maya.api.OpenMaya import MVector
+import maya.api.OpenMaya as om
 
 result = cmds.promptDialog(
                 title = "Average Normals",
@@ -9,32 +9,20 @@ result = cmds.promptDialog(
                 defaultButton = "OK",
                 cancelButton = "Cancel",
                 dismissString = "Cancel")
-                
+
+# main
+
 if result == "OK":
     str_dst = cmds.promptDialog(query=True, text=True)
     dst = float(str_dst)
-
-    objs = cmds.ls(selection = True)
-
-    for obj in objs:
-
-        num_vertices = cmds.polyEvaluate(obj, vertex=True)
-
-        # original normals
-        # range: 0 to num_vertices - 1
-        normals_origin = []
-        for i in range(num_vertices):
-            normal = cmds.polyNormalPerVertex(f'{obj}.vtx[{i}]', query=True, xyz=True)
-            normals_origin.append(MVector(normal[0], normal[1], normal[2]))
-
-        # average normals
-        cmds.polyAverageNormal(distance=dst, prenormalize=True)
-        normals_average = []
-        for i in range(num_vertices):
-            normal = cmds.polyNormalPerVertex(f'{obj}.vtx[{i}]', query=True, xyz=True)
-            normals_average.append(MVector(normal[0], normal[1], normal[2]))
-        
-        # transfer average normals to tangents
-        # for i in range(num_vertices):
-
-            
+    
+    # a list contains full DAG
+    selectModels = cmds.ls(sl=True, l=True)
+    selectList = om.MGlobal.getActiveSelectionList()
+    
+    for index, model in enumerate(selectModels):
+        dagPath = selectList.getDagPath(index)
+        fnMesh = om.MFnMesh(dagPath)
+        # print type
+        print(type(fnMesh))
+    

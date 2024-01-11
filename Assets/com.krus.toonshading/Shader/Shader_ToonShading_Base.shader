@@ -126,6 +126,7 @@ Shader "Krus/ToonShading"
                 float4 posOS : POSITION;
                 float2 uv0 : TEXCOORD0;
                 float2 uv1 : TEXCOORD1;
+                float2 uv2 : TEXCOORD2;
                 float3 normalOS : NORMAL;
                 float3 tangentOS : TANGENT;
                 half4 color : COLOR;
@@ -134,11 +135,12 @@ Shader "Krus/ToonShading"
             struct v2f
             {
                 float4 pos : SV_POSITION;
-                float4 uv : TEXCOORD0;
-                float3 normalWS : TEXCOORD1;
-                float3 posWS : TEXCOORD2;
-                float4 shadowCoord : TEXCOORD3;
-                float3 tangentWS : TEXCOORD4;
+                float4 uv01 : TEXCOORD0;
+                float2 uv2 : TEXCOORD1;
+                float3 normalWS : TEXCOORD2;
+                float3 posWS : TEXCOORD3;
+                float4 shadowCoord : TEXCOORD4;
+                float3 tangentWS : TEXCOORD5;
                 half4 color : COLOR;
             };
 
@@ -172,8 +174,9 @@ Shader "Krus/ToonShading"
             {
                 v2f o;
                 o.pos = TransformObjectToHClip(v.posOS.xyz);
-                o.uv.xy = v.uv0;
-                o.uv.zw = v.uv1;
+                o.uv01.xy = v.uv0;
+                o.uv01.zw = v.uv1;
+                o.uv2 = v.uv2;
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
                 o.posWS = TransformObjectToWorld(v.posOS.xyz);
                 o.shadowCoord = TransformWorldToShadowCoord(o.posWS);
@@ -196,10 +199,10 @@ Shader "Krus/ToonShading"
 
                 // TEXTURES
                 // _IlmTex: r - metallic; g - shadow offset; b - specular mask; a - outline
-                half3 baseCol = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, i.uv.xy).rgb;
-                half3 sssCol = SAMPLE_TEXTURE2D(_SSSTex, sampler_SSSTex, i.uv.xy).rgb;
-                half4 ilmTex = SAMPLE_TEXTURE2D(_IlmTex, sampler_IlmTex, i.uv.xy);
-                half detailTex = SAMPLE_TEXTURE2D(_DetailTex, sampler_DetailTex, i.uv.zw).r;
+                half3 baseCol = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, i.uv01.xy).rgb;
+                half3 sssCol = SAMPLE_TEXTURE2D(_SSSTex, sampler_SSSTex, i.uv01.xy).rgb;
+                half4 ilmTex = SAMPLE_TEXTURE2D(_IlmTex, sampler_IlmTex, i.uv01.xy);
+                half detailTex = SAMPLE_TEXTURE2D(_DetailTex, sampler_DetailTex, i.uv01.zw).r;
                 half shadowOffset = ilmTex.g;
                 half AO = i.color.r;
                 half outline = ilmTex.a * detailTex;
@@ -258,8 +261,8 @@ Shader "Krus/ToonShading"
                 
                 col *= outline;
                 // col = rimSpecular;
-                col = ilmTex.a;
-                
+                // col = ilmTex.a;
+
                 return half4(col, 1);
             }
             ENDHLSL
