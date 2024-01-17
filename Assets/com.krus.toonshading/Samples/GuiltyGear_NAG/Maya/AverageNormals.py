@@ -85,7 +85,7 @@ def main():
                     return
 
                 ############ Store original normals ############
-                originalNormals = om.MFloatVectorArray()
+                originalNormals = om.MFloatVectorArray()    
                 originalNormals = fnMesh.getNormals()
                 print("Store orignal normals - Finished")
                 print("------------------------------------")
@@ -135,33 +135,6 @@ def main():
                             0, 0, 0, 1
                         ]))
 
-                        # TBN
-                        # unfold along the column
-                        # matrix_TStoOS = om.MMatrix(([
-                        #     tangentOS.x, binormalOS.x, normalOS.x, 0,
-                        #     tangentOS.y, binormalOS.y, normalOS.y, 0,
-                        #     tangentOS.z, binormalOS.z, normalOS.z, 0,
-                        #     0, 0, 0, 1
-                        # ]))
-
-                        # TNB
-                        # unfold along the row
-                        # matrix_TStoOS = om.MMatrix(([
-                        #     tangentOS.x, tangentOS.y, tangentOS.z, 0,
-                        #     normalOS.x, normalOS.y, normalOS.z, 0,
-                        #     binormalOS.x, binormalOS.y, binormalOS.z, 0,
-                        #     0, 0, 0, 1
-                        # ]))
-
-                        # TNB
-                        # unfold along the column
-                        # matrix_TStoOS = om.MMatrix(([
-                        #     tangentOS.x, normalOS.x, binormalOS.x, 0,
-                        #     tangentOS.y, normalOS.y, binormalOS.y, 0,
-                        #     tangentOS.z, normalOS.z, binormalOS.z, 0,
-                        #     0, 0, 0, 1
-                        # ]))
-
                         matrix_OStoTS = matrix_TStoOS.transpose()
 
                         DebugPrint("matrix_TStoOS_in", matrix_TStoOS, matrixConstructLoopCount)
@@ -183,6 +156,7 @@ def main():
 
 
                 ############ Average normals ############
+                cmds.select(model)
                 cmds.polyAverageNormal(distance=float_distance)
                 # mm.eval("expandPolyGroupSelection; polyAverageNormal -prenormalize 0 -allowZeroNormal 1 -postnormalize 0 -distance 0.1 -replaceNormalXYZ 1 0 0 ;")
                 # pm.polyAverageNormal = pm.polyAverageNormal(allowZeroNormal=1, distance=float_distance, postnormalize=0, prenormalize=0)
@@ -243,8 +217,10 @@ def main():
                 print("------------------------------------")
 
                 ########### Set original normals ############
+                print(f"len(originalNormals): {len(originalNormals)}")
                 fnMesh.setNormals(originalNormals)
                 print(f"len(originalNormals): {len(originalNormals)}")
+
                 print("Set original normals - Finished")
                 print("------------------------------------")
 
@@ -253,19 +229,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    ### TEST ###
-    Matrix = om.MMatrix()
-    Matrix = om.MMatrix(([
-        0.3, 0, 0, 0,
-        0, 0.4, 0, 0,
-        0, 0, 0.5, 0,
-        0, 0, 0, 0.6]))
-    
-    Vector = om.MPoint()
-    Vector = om.MPoint((1,1,1,1))
-
-    print(Matrix)
-    print(Vector)
-    print(f"Matrix * Vector: {Matrix * Vector}")
-    print(f"Vector * Matrix: {Vector * Matrix}")
