@@ -7,7 +7,7 @@ import numpy as np
 import maya.mel as mm 
 import pymel.core as pm
 
-def DebugPrint(header, message, index, num=5):
+def DebugPrint(header, message, index, num=10):
     if index < num:
         print(f"{index}: {header}: {message}")
 
@@ -109,6 +109,7 @@ def main():
                     #     print(f"uvSets[{i}]: {uvSets[i]}")
 
                     globalFaceId = itMeshPolygon.index()
+                    DebugPrint("globalFaceId", globalFaceId, matrixConstructLoopCount)
 
                     # loop each vertex in face
                     # Get TS coord axis in OS
@@ -124,20 +125,52 @@ def main():
 
                         # create matrix
                         matrix_TStoOS = om.MMatrix()
+                        
+                        # TBN
+                        # unfold along the row
                         matrix_TStoOS = om.MMatrix(([
-                            tangentOS.x, binormalOS.x, normalOS.x, 0,
-                            tangentOS.y, binormalOS.y, normalOS.y, 0,
-                            tangentOS.z, binormalOS.z, normalOS.z, 0,
+                            tangentOS.x, tangentOS.y, tangentOS.z, 0,
+                            binormalOS.x, binormalOS.y, binormalOS.z, 0,
+                            normalOS.x, normalOS.y, normalOS.z, 0,
                             0, 0, 0, 1
                         ]))
-                        matrix_OStoTS = matrix_TStoOS.inverse()
 
-                        DebugPrint("matrix_TStoOS", matrix_TStoOS, matrixConstructLoopCount)
-                        DebugPrint("matrix_OStoTS", matrix_OStoTS, matrixConstructLoopCount)
+                        # TBN
+                        # unfold along the column
+                        # matrix_TStoOS = om.MMatrix(([
+                        #     tangentOS.x, binormalOS.x, normalOS.x, 0,
+                        #     tangentOS.y, binormalOS.y, normalOS.y, 0,
+                        #     tangentOS.z, binormalOS.z, normalOS.z, 0,
+                        #     0, 0, 0, 1
+                        # ]))
 
-                        # these codes are influencing polyAverageNormal
-                        matrice_TStoOS.append(matrix_TStoOS)
-                        matrice_OStoTS.append(matrix_OStoTS)
+                        # TNB
+                        # unfold along the row
+                        # matrix_TStoOS = om.MMatrix(([
+                        #     tangentOS.x, tangentOS.y, tangentOS.z, 0,
+                        #     normalOS.x, normalOS.y, normalOS.z, 0,
+                        #     binormalOS.x, binormalOS.y, binormalOS.z, 0,
+                        #     0, 0, 0, 1
+                        # ]))
+
+                        # TNB
+                        # unfold along the column
+                        # matrix_TStoOS = om.MMatrix(([
+                        #     tangentOS.x, normalOS.x, binormalOS.x, 0,
+                        #     tangentOS.y, normalOS.y, binormalOS.y, 0,
+                        #     tangentOS.z, normalOS.z, binormalOS.z, 0,
+                        #     0, 0, 0, 1
+                        # ]))
+
+                        matrix_OStoTS = matrix_TStoOS.transpose()
+
+                        DebugPrint("matrix_TStoOS_in", matrix_TStoOS, matrixConstructLoopCount)
+                        DebugPrint("matrix_OStoTS_in", matrix_OStoTS, matrixConstructLoopCount)
+
+                        # don't use .append() to add matrix to array
+                        # not working
+                        matrice_TStoOS[matrixConstructLoopCount] = matrix_TStoOS
+                        matrice_OStoTS[matrixConstructLoopCount] = matrix_OStoTS
 
                         matrixConstructLoopCount += 1
                     itMeshPolygon.next()
@@ -147,6 +180,7 @@ def main():
                 print(f"Matrix Construct Loop Count: {matrixConstructLoopCount}")
                 print("Matrix OS to TS - Finished")
                 print("------------------------------------")
+
 
                 ############ Average normals ############
                 cmds.polyAverageNormal(distance=float_distance)
@@ -165,13 +199,18 @@ def main():
                     # eace vertex in face
                     for i in range(itMeshPolygon.polygonVertexCount()):
                         globalVertexId = itMeshPolygon.vertexIndex(i)
+                        avgNormalOS = om.MVector()
                         avgNormalOS = fnMesh.getFaceVertexNormal(globalFaceId, globalVertexId)
 
                         DebugPrint("avgNormalOS", avgNormalOS, setUVLoopCount)
 
                         # to tangent space
-                        avgNormalTS = om.MVector()
                         matrix_OStoTS = matrice_OStoTS[matrixId]
+                        matrix_TStoOS = matrice_TStoOS[matrixId]
+                        DebugPrint("matrixId", matrixId, setUVLoopCount)
+                        DebugPrint("matrix_OStoTS_out", matrix_OStoTS, setUVLoopCount)
+                        DebugPrint("matrix_TStoOS_out", matrix_TStoOS,setUVLoopCount)
+                        avgNormalTS = om.MVector()
                         avgNormalTS = avgNormalOS * matrix_OStoTS
                         
                         DebugPrint("avgNormalTS", avgNormalTS, setUVLoopCount)
@@ -185,13 +224,14 @@ def main():
                         avgNormalTS_decoded = Decode(avgNormalTS_encoded)
                         DebugPrint("avgNormalTS_decoded", avgNormalTS_decoded, setUVLoopCount)
 
+                        ####
                         # set uv
                         itMeshPolygon.setUV(i, avgNormalTS_encoded, uvSet=uvSetNames[uvIndexToWriteIn])
 
-                        matrix_TStoOS = matrice_TStoOS[matrixId]
-                        avgNormalOS = avgNormalTS * matrix_TStoOS
+                        # matrix_TStoOS = matrice_TStoOS[matrixId]
+                        # avgNormalOS = avgNormalTS * matrix_TStoOS
 
-                        fnMesh.setFaceVertexNormal(avgNormalOS, globalFaceId, globalVertexId)
+                        # fnMesh.setFaceVertexNormal(avgNormalOS, globalFaceId, globalVertexId)
                         
                         DebugPrint("*", "*", setUVLoopCount)
                         matrixId += 1
@@ -202,7 +242,7 @@ def main():
                 print("Average normals to UV - Finished")
                 print("------------------------------------")
 
-                ############ Set original normals ############
+                ########### Set original normals ############
                 fnMesh.setNormals(originalNormals)
                 print(f"len(originalNormals): {len(originalNormals)}")
                 print("Set original normals - Finished")
@@ -213,3 +253,19 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    ### TEST ###
+    Matrix = om.MMatrix()
+    Matrix = om.MMatrix(([
+        0.3, 0, 0, 0,
+        0, 0.4, 0, 0,
+        0, 0, 0.5, 0,
+        0, 0, 0, 0.6]))
+    
+    Vector = om.MPoint()
+    Vector = om.MPoint((1,1,1,1))
+
+    print(Matrix)
+    print(Vector)
+    print(f"Matrix * Vector: {Matrix * Vector}")
+    print(f"Vector * Matrix: {Vector * Matrix}")
