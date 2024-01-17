@@ -1,12 +1,8 @@
-# MR = Mesh Relative
-# FVR = Face Vertex Relative
-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 import numpy as np
-import maya.mel as mm 
-import pymel.core as pm
 
+# Functions
 def DebugPrint(header, message, index, num=10):
     if index < num:
         print(f"{index}: {header}: {message}")
@@ -96,6 +92,7 @@ def main():
                 tangentOS = om.MVector()
                 binormalOS = om.MVector()
                 # Array size must be specified
+                # Or unexpected results come out
                 matrice_OStoTS = om.MMatrixArray(fnMesh.numFaceVertices)
                 matrice_TStoOS = om.MMatrixArray(fnMesh.numFaceVertices)
                 matrixConstructLoopCount = 0
@@ -158,8 +155,6 @@ def main():
                 ############ Average normals ############
                 cmds.select(model)
                 cmds.polyAverageNormal(distance=float_distance)
-                # mm.eval("expandPolyGroupSelection; polyAverageNormal -prenormalize 0 -allowZeroNormal 1 -postnormalize 0 -distance 0.1 -replaceNormalXYZ 1 0 0 ;")
-                # pm.polyAverageNormal = pm.polyAverageNormal(allowZeroNormal=1, distance=float_distance, postnormalize=0, prenormalize=0)
                 print("Average normals - Finished")
                 print("------------------------------------")
 
@@ -194,30 +189,24 @@ def main():
                         avgNormalTS_encoded = Encode(avgNormalTS)
                         DebugPrint("avgNormalTS_encoded", avgNormalTS_encoded, setUVLoopCount)
                         
-                        # Test
+                        ### Test ###
                         avgNormalTS_decoded = Decode(avgNormalTS_encoded)
                         DebugPrint("avgNormalTS_decoded", avgNormalTS_decoded, setUVLoopCount)
 
-                        ####
                         # set uv
                         itMeshPolygon.setUV(i, avgNormalTS_encoded, uvSet=uvSetNames[uvIndexToWriteIn])
-
-                        # matrix_TStoOS = matrice_TStoOS[matrixId]
-                        # avgNormalOS = avgNormalTS * matrix_TStoOS
-
-                        # fnMesh.setFaceVertexNormal(avgNormalOS, globalFaceId, globalVertexId)
                         
                         DebugPrint("*", "*", setUVLoopCount)
                         matrixId += 1
                         setUVLoopCount += 1
 
                     itMeshPolygon.next()
+                
                 print(f"Set UV Loop Count: {setUVLoopCount}")
                 print("Average normals to UV - Finished")
                 print("------------------------------------")
 
                 ########### Set original normals ############
-                print(f"len(originalNormals): {len(originalNormals)}")
                 fnMesh.setNormals(originalNormals)
                 print(f"len(originalNormals): {len(originalNormals)}")
 
