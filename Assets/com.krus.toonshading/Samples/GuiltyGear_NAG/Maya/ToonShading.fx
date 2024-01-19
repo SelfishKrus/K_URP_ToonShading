@@ -16,39 +16,6 @@
 #endif 
 
 
-RasterizerState RAST_NS
-{
-	CullMode = NONE;
-	FillMode = SOLID;
-};
-
-DepthStencilState DEPSTEN_FAL
-{
-	DepthEnable = FALSE;
-	DepthWriteMask = ALL;
-	DepthFunc = LESS;
-};
-
-BlendState BLEND_FFOZAOZA
-{
-	AlphaToCoverageEnable = FALSE;
-	BlendEnable[0] = FALSE;
-	SrcBlend = ONE;
-	DestBlend = ZERO;
-	BlendOp = ADD;
-	SrcBlendAlpha = ONE;
-	DestBlendAlpha = ZERO;
-	BlendOpAlpha = ADD;
-	RenderTargetWriteMask[0] = 0x0F;
-};
-
-DepthStencilState DEPSTEN_TAL
-{
-	DepthEnable = TRUE;
-	DepthWriteMask = ALL;
-	DepthFunc = LESS;
-};
-
 
 // ----------------------------------- Per Frame --------------------------------------
 cbuffer UpdatePerFrame : register(b0)
@@ -74,103 +41,24 @@ cbuffer UpdatePerObject : register(b1)
 
 };
 
-// ---------------------------------------- Textures -----------------------------------------
-Texture2D NAG_Ssstga
-<
-	string ResourceName = "NAG_Sss.tga";
-	string UIName = "NAG_Ssstga";
-	string ResourceType = "2D";
-	string UIWidget = "FilePicker";
->;
-
-SamplerState MMMLWWWSampler
-{
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = WRAP;
-	AddressV = WRAP;
-	AddressW = WRAP;
-};
-
-Texture2D NAG_basetga
-<
-	string ResourceName = "NAG_base.tga";
-	string UIName = "NAG_basetga";
-	string ResourceType = "2D";
-	string UIWidget = "FilePicker";
->;
-
-Texture2D NAG_ilmtga
-<
-	string ResourceName = "NAG_ilm.tga";
-	string UIName = "NAG_ilmtga";
-	string ResourceType = "2D";
-	string UIWidget = "FilePicker";
->;
-
-
 // -------------------------------------- ShaderVertex --------------------------------------
 struct APPDATA
 {
-	float3 Normal : NORMAL;
 	float3 Position : POSITION;
-	float2 map1 : TEXCOORD0;
 };
 
 struct SHADERDATA
 {
 	float4 Position : SV_Position;
+	half3 FogFactor : TEXCOORD0;
+	float4 WorldPosition : TEXCOORD1;
 };
 
 SHADERDATA ShaderVertex(APPDATA IN)
 {
 	SHADERDATA OUT;
 
-	float3 MulOp = (IN.Normal * 1.000000);
-	float3 AddOp = (MulOp + IN.Position);
-	float4 VectorConstruct = float4(AddOp.x, AddOp.y, AddOp.z, 1.000000);
-	OUT.Position = VectorConstruct;
-	float4 WVSpace = mul(OUT.Position, wvp);
-	OUT.Position = WVSpace;
-
-	return OUT;
-}
-
-// -------------------------------------- ShaderPixel --------------------------------------
-struct PIXELDATA
-{
-	float4 Color : SV_Target;
-};
-
-PIXELDATA ShaderPixel(SHADERDATA IN)
-{
-	PIXELDATA OUT;
-
-	OUT.Color = float4(0,0,0,1);
-
-	return OUT;
-}
-
-// -------------------------------------- ShaderVertexP1 --------------------------------------
-struct SHADERDATAP1
-{
-	float4 Position : SV_Position;
-	float4 map1 : TEXCOORD0;
-	float4 Normal : NORMAL;
-	half3 FogFactor : TEXCOORD1;
-	float4 WorldPosition : TEXCOORD2;
-};
-
-SHADERDATAP1 ShaderVertexP1(APPDATA IN)
-{
-	SHADERDATAP1 OUT;
-
 	OUT.Position = float4(IN.Position, 1);
-	float4 OutUVs = float4(IN.map1.x, IN.map1.y, 0.000000, 0.000000);
-	OUT.map1 = OutUVs;
-	float3 MulOp = mul(IN.Normal, ((float3x3)world));
-	float3 NormalN = normalize(MulOp);
-	float4 WorldNormal = float4(NormalN.x, NormalN.y, NormalN.z, 1.000000);
-	OUT.Normal = WorldNormal;
 	OUT.WorldPosition = (mul(float4(IN.Position,1), world));
 	float4 _HPosition = mul( float4(OUT.WorldPosition.xyz, 1), viewPrj ); 
 	float fogFactor = 0.0; 
@@ -191,26 +79,17 @@ SHADERDATAP1 ShaderVertexP1(APPDATA IN)
 	return OUT;
 }
 
-// -------------------------------------- ShaderPixelP1 --------------------------------------
-struct PIXELDATAP1
+// -------------------------------------- ShaderPixel --------------------------------------
+struct PIXELDATA
 {
 	float4 Color : SV_Target;
 };
 
-PIXELDATAP1 ShaderPixelP1(SHADERDATAP1 IN)
+PIXELDATA ShaderPixel(SHADERDATA IN)
 {
-	PIXELDATAP1 OUT;
+	PIXELDATA OUT;
 
-	float4 Sampler = NAG_Ssstga.Sample(MMMLWWWSampler, float2(IN.map1.xy.x, 1-IN.map1.xy.y));
-	float4 Sampler57 = NAG_basetga.Sample(MMMLWWWSampler, float2(IN.map1.xy.x, 1-IN.map1.xy.y));
-	float3 NormOp = normalize(IN.Normal.xyz);
-	float3 NormOp52 = normalize(float3(0.791339, -1.019685, -1.480315));
-	float DotOp = dot(NormOp, -(NormOp52));
-	float StepOp = step(0.500000, DotOp);
-	float3 LerpOp = lerp(Sampler.xyz, Sampler57.xyz, (float3(1.000000,1.000000,1.000000) * StepOp));
-	float4 Sampler112 = NAG_ilmtga.Sample(MMMLWWWSampler, float2(IN.map1.xy.x, 1-IN.map1.xy.y));
-	float3 MulOp = (LerpOp * Sampler112.w);
-	float4 VectorConstruct = float4(MulOp.x, MulOp.y, MulOp.z, 1.000000);
+	float4 VectorConstruct = float4(1.000000, 1.000000, 1.000000, 1.000000);
 	if (MayaHwFogEnabled) { 
 		float fogFactor = (1.0 - IN.FogFactor.x) * MayaHwFogColor.a; 
 		VectorConstruct.rgb	= lerp(VectorConstruct.rgb, MayaHwFogColor.rgb, fogFactor); 
@@ -221,11 +100,43 @@ PIXELDATAP1 ShaderPixelP1(SHADERDATAP1 IN)
 	return OUT;
 }
 
+// -------------------------------------- ShaderVertexP1 --------------------------------------
+struct SHADERDATAP1
+{
+	float4 Position : SV_Position;
+};
+
+SHADERDATAP1 ShaderVertexP1(APPDATA IN)
+{
+	SHADERDATAP1 OUT;
+
+	OUT.Position = float4(IN.Position, 1);
+	float4 WVSpace = mul(OUT.Position, wvp);
+	OUT.Position = WVSpace;
+
+	return OUT;
+}
+
+// -------------------------------------- ShaderPixelP1 --------------------------------------
+struct PIXELDATAP1
+{
+	float4 Color : SV_Target;
+};
+
+PIXELDATAP1 ShaderPixelP1(SHADERDATAP1 IN)
+{
+	PIXELDATAP1 OUT;
+
+	OUT.Color = float4(0,0,0,1);
+
+	return OUT;
+}
+
 // -------------------------------------- technique T0 ---------------------------------------
 technique11 T0
 <
-	bool overridesDrawState = true;
-	int isTransparent = 0;
+	bool overridesDrawState = false;
+	int isTransparent = 1;
 >
 {
 	pass P0
@@ -233,9 +144,6 @@ technique11 T0
 		string drawContext = "colorPass";
 	>
 	{
-		SetRasterizerState(RAST_NS);
-		SetDepthStencilState(DEPSTEN_FAL, 0);
-		SetBlendState(BLEND_FFOZAOZA, float4(0.0, 0.0, 0.0, 0.0), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, ShaderVertex()));
 		SetPixelShader(CompileShader(ps_5_0, ShaderPixel()));
 		SetHullShader(NULL);
@@ -248,9 +156,6 @@ technique11 T0
 		string drawContext = "colorPass";
 	>
 	{
-		SetRasterizerState(RAST_NS);
-		SetDepthStencilState(DEPSTEN_TAL, 0);
-		SetBlendState(BLEND_FFOZAOZA, float4(0.0, 0.0, 0.0, 0.0), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, ShaderVertexP1()));
 		SetPixelShader(CompileShader(ps_5_0, ShaderPixelP1()));
 		SetHullShader(NULL);
