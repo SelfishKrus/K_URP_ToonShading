@@ -129,7 +129,7 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.01
+    - _OutlineOffset: 0.0341
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 0
@@ -138,7 +138,7 @@ Material:
     - _RimSpecularThreshold: 0.35
     - _RimSpecularWidth: 3
     - _ShadowSmoothness: 0
-    - _ShadowThreshold: 0.5
+    - _ShadowThreshold: 0.454
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

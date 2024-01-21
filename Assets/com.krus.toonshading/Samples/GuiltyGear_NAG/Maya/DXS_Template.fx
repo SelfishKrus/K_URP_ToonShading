@@ -3,6 +3,7 @@
     /******* Lighting Macros *******/
     /** To use "Object-Space" lighting definitions, change these two macros: **/
     #define LIGHT_COORDS "World"
+    #define _SPIN_MAX 99999
     // #define OBJECT_SPACE_LIGHTS /* Define if LIGHT_COORDS is "Object" */
 
     // Case insensitive
@@ -40,51 +41,131 @@
     ////                              Properties                             ////
     /////////////////////////////////////////////////////////////////////////////
 
-    float3 gLamp0Dir : DIRECTION 
-    <
-        string Object = "DirectionalLight0";
-        string UIName =  "Lamp 0 Direction";
-        string Space = (LIGHT_COORDS);
-    > = {0.7f,-0.7f,-0.7f};
+    // Light 0 //
 
-    float3 gLamp0Color : SPECULAR 
-    <
-        string Object = "DirectionalLight0";
-        string UIName =  "Lamp 0 Color";
-        string UIWidget = "Color";
-    > = {1.0f,1.0f,1.0f};
+    bool light0Enable : LIGHTENABLE
+	<
+		string Object = "Light 0";
+		string UIName = "Enable Light 0";
+		int UIOrder = 20;
+    > = true;
 
-    float3 gAmbiColor : AMBIENT 
-    <
-        string UIName =  "Ambient Light";
-        string UIWidget = "Color";
-    > = {0.07f,0.07f,0.07f};
+    int light0Type : LIGHTTYPE
+	<
+		string Object = "Light 0";
+		string UIName = "Light 0 Type";
+		string UIFieldNames ="None:Default:Spot:Point:Directional:Ambient";
+		int UIOrder = 21;
+		float UIMin = 0;
+		float UIMax = 5;
+		float UIStep = 1;
+	> = 4; // default to Directional
 
-    float3 gSurfaceColor : DIFFUSE 
-    <
-        string UIName =  "Surface";
-        string UIWidget = "Color";
-    > = {0.0f,0.0f,1.0f};
+    float3 _Light0Pos : POSITION 
+	< 
+		string Object = "Light 0";
+		string UIName = "Light 0 Position"; 
+		string Space = "World"; 
+		int UIOrder = 22;
+	> = {0, 0, 0}; 
 
-    float gKd = 0.9f;
-    float gKs = 0.4f;
-    float gSpecExpon = 30.0f;
+    float3 _Light0Dir : DIRECTION 
+	< 
+		string Object = "Light 0";
+		string UIName = "Light 0 Direction"; 
+		string Space = "World"; 
+		int UIOrder = 23;
+	> = {1.0f, 1.0f, 1.0f}; 
+
+    float3 _Light0Color : LIGHTCOLOR 
+	<
+		string Object = "Light 0";
+        string UIName = "Light 0 Color"; 
+        string UIWidget = "Color"; 
+        int UIOrder = 24;
+	> = { 1.0f, 1.0f, 1.0f};
+
+    float _Light0Intensity : LIGHTINTENSITY 
+	<
+        string Object = "Light 0";
+        string UIName = "Light 0 Intensity"; 
+        float UIMin = 0.0;
+        float UIMax = _SPIN_MAX;
+        float UIStep = 0.01;
+        int UIOrder = 24;
+	> = { 1.0f };
+
+    // Texture // 
+    
+    Texture2D _MainTex
+    <
+        string UIGroup = "";
+        string ResourceName = "";
+        string ResourceType = "2D";
+	    string UIWidget = "FilePicker";
+	    string UIName = "Main Texture";
+        int mipmaplevels = 0;
+    >;
+
+        RasterizerState rasterizerState
+    {   
+        // CullMode
+        // NONE     - no culling
+        // Front    - cull front
+        // Back     - cull back
+        CullMode = NONE;
+        FillMode = SOLID;
+    };
+
+    // State blocks //
+
+    DepthStencilState depthStencilState
+    {
+        DepthEnable = TRUE; 
+        StencilEnable = FALSE;
+    };
+    
+    SamplerState samplerState
+    {
+        Filter = MIN_MAG_MIP_LINEAR;
+        AddressU = WRAP;
+        AddressV = WRAP;
+    };
+    
+
 
     /////////////////////////////////////////////////////////////////////////////
     ////                               Struct                                ////
     /////////////////////////////////////////////////////////////////////////////
 
+    // Vertex Shader Input //
+
     struct appdata
     {
         float3 pos	: POSITION;
         float3 normalOS	: NORMAL;
+
+        float2 UV0 : TEXCOORD0;
     };
+
+    // Vertex Shader Output //
 
     struct vertexOutput
     {
         float4 hpos	: POSITION;
         float3 normalWS : NORMAL;
+
+        float2 UV0 : TEXCOORD0;
     };
+
+    /////////////////////////////////////////////////////////////////////////////
+    ////                         Custom Functions                            ////
+    /////////////////////////////////////////////////////////////////////////////
+
+    float2 FlipY(float2 uv)
+    {
+        return float2(uv.x, 1.0f - uv.y);
+    }
 
     /////////////////////////////////////////////////////////////////////////////
     ////                           Vertex Shader                             ////
@@ -95,6 +176,8 @@
         vertexOutput OUT = (vertexOutput)0; // to zero out all members
         OUT.normalWS = mul(float4(IN.normalOS, 0.0f), Matrix_W_IT).xyz;
         OUT.hpos = mul(float4(IN.pos, 1.0f), Matrix_WVP);
+        
+        OUT.UV0 = FlipY(IN.UV0);
         return OUT;
     }
 
@@ -105,7 +188,7 @@
     float4 fragmentShader(vertexOutput IN) : COLOR
     {
         float3 finalColor;
-        finalColor = 1.0f;
+        finalColor = _MainTex.Sample(samplerState, IN.UV0).rgb;
         return float4(finalColor, 1.0f);
     }
 
@@ -113,27 +196,10 @@
     ////                             Technique                               ////
     /////////////////////////////////////////////////////////////////////////////
 
-    RasterizerState rasterizerState
-    {   
-        // CullMode
-        // NONE     - no culling
-        // Front    - cull front
-        // Back     - cull back
-        CullMode = NONE;
-        FillMode = SOLID;
-    };
-
-    DepthStencilState depthStencilState
-    {
-        DepthEnable = TRUE; 
-    };
-
-    
-
     technique10 Simple10
     {
         pass p0
-        {
+        {   
             SetVertexShader(CompileShader(vs_5_0, vertexShader()));
             SetHullShader(NULL);
             SetDomainShader(NULL);
