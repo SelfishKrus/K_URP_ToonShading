@@ -36,10 +36,29 @@ Shader "Krus/ToonShading"
         [Toggle(_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
 
     }
+
     SubShader
     {
         Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline" }
         LOD 100
+
+        HLSLINCLUDE
+        // Custom Functions //
+        float2 FlipY(float2 uv)
+        {
+            return float2(uv.x, 1.0f - uv.y);
+        }
+
+        float3 Decode( float2 f )
+        {
+            f = f * 2.0 - 1.0;
+            
+            float3 n = float3( f.x, f.y, 1.0 - abs( f.x ) - abs( f.y ) );
+            float t = saturate( -n.z );
+            n.xy += n.xy >= 0.0 ? -t : t;
+            return normalize( n );
+        }
+        ENDHLSL
 
         Pass
         {   
@@ -58,14 +77,15 @@ Shader "Krus/ToonShading"
             struct appdata
             {
                 float4 posOS : POSITION;
-                float2 uv : TEXCOORD0;
                 float3 normalOS : NORMAL;
-                float4 tangentOS : TANGENT;
+                float2 uv0 : TEXCOORD0;
+                float2 uv1 : TEXCOORD1;
+                float2 uv2 : TEXCOORD2;
+
             };
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
                 float4 pos : SV_POSITION;
             };
 
@@ -78,20 +98,20 @@ Shader "Krus/ToonShading"
 
             TEXTURE2D(_BaseTex);    SAMPLER(sampler_BaseTex);
 
-            v2f vert (appdata v)
+            v2f vert (appdata IN)
             {
-                v2f o;
+                v2f OUT;
 
-                // float3 bitangentOS = cross(v.normalOS, v.tangentOS.xyz) * v.tangentOS.w;
-                // float3x3 tbn = float3x3(v.tangentOS.xyz, bitangentOS, v.normalOS);
-                v.posOS.xyz += _OutlineOffset * v.normalOS;
+                float3 posOS = IN.posOS.xyz;
+                float3 smoothNormalOS = Decode(IN.uv2);
+                smoothNormalOS.x = -smoothNormalOS.x;   // Swap x due to the coord difference between unity and maya
+                posOS += _OutlineOffset * smoothNormalOS;
 
-                o.pos = TransformObjectToHClip(v.posOS.xyz);
-                o.uv = TRANSFORM_TEX(v.uv, _BaseTex);
-                return o;
+                OUT.pos = TransformObjectToHClip(posOS.xyz);
+                return OUT;
             }
 
-            half4 frag (v2f i) : SV_Target
+            half4 frag (v2f IN) : SV_Target
             {
                 half3 col;
                 col = _OutlineColor;
@@ -100,6 +120,7 @@ Shader "Krus/ToonShading"
 
             ENDHLSL
         }
+
 
         Pass
         {
@@ -169,6 +190,8 @@ Shader "Krus/ToonShading"
             TEXTURE2D(_IlmTex);     SAMPLER(sampler_IlmTex);
             TEXTURE2D(_SSSTex);     SAMPLER(sampler_SSSTex);
             TEXTURE2D(_DetailTex);  SAMPLER(sampler_DetailTex);
+
+ 
 
             v2f vert (appdata v)
             {
