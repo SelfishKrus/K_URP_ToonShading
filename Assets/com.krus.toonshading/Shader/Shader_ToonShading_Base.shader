@@ -221,7 +221,7 @@ Shader "Krus/ToonShading"
                 half NoV = dot(i.normalWS, V);
 
                 // TEXTURES
-                // _IlmTex: r - metallic; g - shadow offset; b - specular mask; a - outline
+                // _IlmTex: r - specular layer; g - shadow offset; b - specular mask; a - outline
                 half3 baseCol = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, i.uv01.xy).rgb;
                 half3 sssCol = SAMPLE_TEXTURE2D(_SSSTex, sampler_SSSTex, i.uv01.xy).rgb;
                 half4 ilmTex = SAMPLE_TEXTURE2D(_IlmTex, sampler_IlmTex, i.uv01.xy);
@@ -229,10 +229,10 @@ Shader "Krus/ToonShading"
                 half shadowOffset = ilmTex.g;
                 half AO = i.color.r;
                 half outline = ilmTex.a * detailTex;
-                half specularIntensity = ilmTex.r;
-                half specularRange = ilmTex.b;
+                half specularMask = ilmTex.b;
+                half specularLayer = ilmTex.r * 255.0f;
 
-                // diffuse
+                // Diffuse // 
                 half isBright = NoL01 * AO;
                 #ifdef _RECEIVE_SHADOWS
                     isBright *= mainLight.shadowAttenuation;
@@ -240,19 +240,26 @@ Shader "Krus/ToonShading"
                 isBright = smoothstep(_ShadowThreshold-_ShadowSmoothness, _ShadowThreshold+_ShadowSmoothness, isBright);
                 half3 diffuse = lerp(sssCol*_DarkCol, baseCol*_BrightCol, isBright) * mainLight.color;
 
-                // specular
-                half isSpecular = pow(NoH, _Glossiness) * specularRange;
-                isSpecular = smoothstep(_SpecularThreshold-_SpecularSmoothness, _SpecularThreshold+_SpecularSmoothness, isSpecular);
-                half3 specular = isSpecular * specularIntensity * mainLight.color * _SpecularCol;
+                // Specular //
+                // feature toggles
+                bool rimToggle = (specularLayer >= 45.0f && specularLayer <= 105.0f);
+                // hard specular for layer 50 ~ 100
+                // bool specularSmoothness = (specularLayer >= 45.0f && specularLayer <= 105.0f) ? _SpecularSmoothness : _SpecularSmoothness;
 
-                // rim specular
+                // Blinn-phong specular 
+                half reflectivity = pow(NoH, _Glossiness) * specularMask;
+                reflectivity = smoothstep(_SpecularThreshold - _SpecularSmoothness, _SpecularThreshold + _SpecularSmoothness, reflectivity);
+                half3 specular = reflectivity  * mainLight.color * _SpecularCol;
+                // specular *= specularToggle;
+
+                // Rim Specular //
                 float2 L_VS = TransformWorldToViewDir(mainLight.direction).xy;
                 float2 N_VS = TransformWorldToViewDir(i.normalWS).xy;
                 float NoL_VS = saturate(dot(N_VS, L_VS));
 
                 float2 UV_PS = i.pos.xy;
                 _RimSpecularWidth = lerp(0, 10, _RimSpecularWidth);
-                float2 offsetUV_PS =  UV_PS + N_VS * _RimSpecularWidth * specularIntensity;
+                float2 offsetUV_PS =  UV_PS + N_VS * _RimSpecularWidth * specularMask;
                 // offsetUV_PS = clamp(offsetUV_PS, 0, _ScreenParams);
                 float linearDepth = LinearEyeDepth(LoadSceneDepth(UV_PS), _ZBufferParams);
                 float linearDepth_offset = LinearEyeDepth(LoadSceneDepth(offsetUV_PS), _ZBufferParams);
@@ -260,31 +267,12 @@ Shader "Krus/ToonShading"
                 _RimSpecularDetail = lerp(0.1, 0.001, _RimSpecularDetail);
                 half3 rimSpecular = _RimSpecularCol * 
                                     smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness, depthDiff * NoL_VS);
-
-                // LoadCameraDepth(UV_PS);
-
-                
-                // float2 offsetUV_SS = UV_SS + N_VS * _Test.x;
-                // float depth = SampleSceneDepth(UV_SS);
-                // depth = Linear01Depth(depth, _ZBufferParams);
-                // float depth_offset = SampleSceneDepth(offsetUV_SS);
-                // depth_offset = Linear01Depth(depth_offset, _ZBufferParams);
-                // float depthDiff = abs(depth_offset - depth) * 10;
-                // half3 rimSpecular = step(depth, depthDiff * _Test.y);
-                
-                // half3 rimSpecular = smoothstep(
-                //     _RimSpecularThreshold-_RimSpecularSmoothness, 
-                //     _RimSpecularThreshold+_RimSpecularSmoothness, 
-                //     NoV);
                 
                 half3 col;
-                // col = diffuse;
-                col = i.color.g;
                 col = diffuse + specular + rimSpecular;
+                // col = ilmTex.b;
                 
                 col *= outline;
-                // col = rimSpecular;
-                // col = ilmTex.a;
 
                 return half4(col, 1);
             }
