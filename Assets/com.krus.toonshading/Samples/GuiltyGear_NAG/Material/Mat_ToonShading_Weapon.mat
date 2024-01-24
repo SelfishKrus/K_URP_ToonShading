@@ -26,6 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _RECEIVE_SHADOWS
+  - _RIM_SPECULAR_SWITCH
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -135,20 +136,22 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimSpecularDetail: 0.3
-    - _RimSpecularSmoothness: 0
+    - _RimSpecularDetail: 0.1
+    - _RimSpecularSmoothness: 0.2
+    - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
-    - _RimSpecularWidth: 1.35
+    - _RimSpecularWidth: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSmoothness: 0.05
-    - _SpecularThreshold: 0.35
+    - _SpecularSmoothness: 0.02
+    - _SpecularThreshold: 0.05
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _UVLines: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

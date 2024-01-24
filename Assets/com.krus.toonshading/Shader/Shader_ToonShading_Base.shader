@@ -5,6 +5,7 @@ Shader "Krus/ToonShading"
         [Header(Outline)]
         _OutlineOffset ("Outline Offset", Range(0, 0.1)) = 0.01
         _OutlineColor ("Outline Color", Color) = (0, 0, 0, 1)
+        [Toggle(_UV_LINES)]_UVLines ("UV Lines", float) = 1
         [Space(10)]
 
         [Header(Toon Shading)]
@@ -26,7 +27,8 @@ Shader "Krus/ToonShading"
         _SpecularCol ("Specular Color", Color) = (1, 1, 1, 1)
 
         [Header(Rim Specular)]
-        _RimSpecularWidth ("Rim Specular Width", Float) = 0.65
+        [Toggle(_RIM_SPECULAR_SWITCH)]_RimSpecularSwitch ("0 - NoV Specular, 1 - DepthDiff Specular", float) = 0
+        _RimSpecularWidth ("Rim Specular Width (DepthDiff Only)", Float) = 0.65
         _RimSpecularDetail ("Rim Specular Detail", Float) = 0.35
         _RimSpecularSmoothness ("Rim Specular Smoothness", Float) = 0.05
         _RimSpecularCol ("Rim Specular Color", Color) = (1, 1, 1, 1)
@@ -135,10 +137,13 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile _ _RIM_SPECULAR_SWITCH
+            #pragma multi_compile _ _UV_LINES
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 
@@ -228,7 +233,6 @@ Shader "Krus/ToonShading"
                 half detailTex = SAMPLE_TEXTURE2D(_DetailTex, sampler_DetailTex, i.uv01.zw).r;
                 half shadowOffset = ilmTex.g;
                 half AO = i.color.r;
-                half outline = ilmTex.a * detailTex;
                 half specularMask = ilmTex.b;
                 half specularLayer = ilmTex.r * 255.0f;
 
@@ -255,22 +259,32 @@ Shader "Krus/ToonShading"
                 // Rim Specular //
                 float2 L_VS = TransformWorldToViewDir(mainLight.direction).xy;
                 float2 N_VS = TransformWorldToViewDir(i.normalWS).xy;
-                float NoL_VS = saturate(dot(N_VS, L_VS));
+                float NoL_VS = (dot(N_VS, L_VS)) * 0.5 + 0.5;
 
-                float2 UV_PS = i.pos.xy;
-                _RimSpecularWidth = lerp(0, 10, _RimSpecularWidth);
-                float2 offsetUV_PS =  UV_PS + N_VS * _RimSpecularWidth * specularMask;
-                // offsetUV_PS = clamp(offsetUV_PS, 0, _ScreenParams);
-                float linearDepth = LinearEyeDepth(LoadSceneDepth(UV_PS), _ZBufferParams);
-                float linearDepth_offset = LinearEyeDepth(LoadSceneDepth(offsetUV_PS), _ZBufferParams);
-                float depthDiff = abs(linearDepth_offset - linearDepth);
-                _RimSpecularDetail = lerp(0.1, 0.001, _RimSpecularDetail);
-                half3 rimSpecular = _RimSpecularCol * 
-                                    smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness, depthDiff * NoL_VS);
-                
+                #ifdef _RIM_SPECULAR_SWITCH
+                    float2 UV_PS = i.pos.xy;
+                    _RimSpecularWidth = lerp(0, 10, _RimSpecularWidth);
+                    float2 offsetUV_PS =  UV_PS + N_VS * _RimSpecularWidth;
+                    // offsetUV_PS = clamp(offsetUV_PS, 0, _ScreenParams);
+                    float linearDepth = Linear01Depth(LoadSceneDepth(UV_PS), _ZBufferParams);
+                    float linearDepth_offset = Linear01Depth(LoadSceneDepth(offsetUV_PS), _ZBufferParams);
+                    float depthDiff = abs(linearDepth_offset - linearDepth);
+                    half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness, depthDiff*NoL_VS);
+                #else
+                    half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness,(1-saturate(NoV)) * NoL01 );
+                #endif
+
+                // Outline //
+                // sketch 
+                half outline = detailTex;
+                // uv lines
+                #ifdef _UV_LINES
+                    outline *= ilmTex.a;
+                #endif
+                // post process outline
+
                 half3 col;
                 col = diffuse + specular + rimSpecular;
-                // col = ilmTex.b;
                 
                 col *= outline;
 
