@@ -2,6 +2,9 @@ Shader "Krus/ToonShading"
 {
     Properties
     {   
+        [Toggle(_UV2_CHECK)] _UV2_CHECK ("UV2 Check", float) = 0
+        [Toggle(_MAT_OVERRIDE)] _MAT_OVERRIDE ("Material Override", float) = 0
+
         [Header(Outline)]
         _OutlineOffset ("Outline Offset", Range(0, 0.1)) = 0.01
         _OutlineColor ("Outline Color", Color) = (0, 0, 0, 1)
@@ -139,6 +142,8 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _RIM_SPECULAR_SWITCH
             #pragma multi_compile _ _UV_LINES
+            #pragma multi_compile _ _UV2_CHECK
+            #pragma multi_compile _ _MAT_OVERRIDE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -287,6 +292,14 @@ Shader "Krus/ToonShading"
                 col = diffuse + specular + rimSpecular;
                 
                 col *= outline;
+
+                #ifdef _UV2_CHECK
+                    col = float3(i.uv2, 1);
+                #endif
+
+                #ifdef _MAT_OVERRIDE
+                    col = 1;
+                #endif
 
                 return half4(col, 1);
             }
