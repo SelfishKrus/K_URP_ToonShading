@@ -6,7 +6,7 @@ Shader "Krus/ToonShading"
         [Toggle(_MAT_OVERRIDE)] _MAT_OVERRIDE ("Material Override", float) = 0
 
         [Header(Outline)]
-        _OutlineOffset ("Outline Offset", Range(0, 0.1)) = 0.01
+        _OutlineOffset ("Outline Offset", Range(0, 0.05)) = 0.01
         _OutlineColor ("Outline Color", Color) = (0, 0, 0, 1)
         [Toggle(_UV_LINES)]_UVLines ("UV Lines", float) = 1
         [Space(10)]
@@ -68,7 +68,7 @@ Shader "Krus/ToonShading"
         Pass
         {   
             Name "OutlinePass"
-            Tags {"Queue"="Geometry"}
+            Tags {"Queue"="Geometry+10"}
             ZWrite On
             Cull Front
 
@@ -112,7 +112,7 @@ Shader "Krus/ToonShading"
                 smoothNormalOS.x = -smoothNormalOS.x;   // Swap x due to the coord difference between unity and maya
                 posOS += _OutlineOffset * smoothNormalOS;
 
-                OUT.pos = TransformObjectToHClip(posOS.xyz);
+                OUT.pos = TransformObjectToHClip(posOS);
                 return OUT;
             }
 
@@ -299,6 +299,7 @@ Shader "Krus/ToonShading"
 
                 #ifdef _MAT_OVERRIDE
                     col = 1;
+                    col *= outline;
                 #endif
 
                 return half4(col, 1);
@@ -382,6 +383,44 @@ Shader "Krus/ToonShading"
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthNormals"
+            Tags{"LightMode" = "DepthNormals"}
+
+            ZWrite On
+            Cull[_Cull]
+
+            HLSLPROGRAM
+            #pragma only_renderers gles gles3 glcore d3d11
+            #pragma target 2.0
+
+            #pragma vertex DepthNormalsVertex
+            #pragma fragment DepthNormalsFragment
+
+            // -------------------------------------
+            // Material Keywords
+            #pragma shader_feature_local _NORMALMAP
+            #pragma shader_feature_local _PARALLAXMAP
+            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+
+            //--------------------------------------
+            // GPU Instancing
+            #pragma multi_compile_instancing
+            #pragma multi_compile _ DOTS_INSTANCING_ON
+            #pragma target 3.5 DOTS_INSTANCING_ON
+
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
             ENDHLSL
         }
     }
