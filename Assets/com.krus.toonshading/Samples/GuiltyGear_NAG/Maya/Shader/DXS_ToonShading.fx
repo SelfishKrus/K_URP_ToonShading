@@ -163,6 +163,12 @@
         string UIWidget = "Color";
     >;
 
+    bool _EnableUV2Check
+    <
+        string UIName = "";
+        string UIGroup = "Diffuse";
+    >;
+
     /////////////////////////////////////////////////////////////////////////////
     ////                               Struct                                ////
     /////////////////////////////////////////////////////////////////////////////
@@ -186,6 +192,7 @@
 
         float2 UV0 : TEXCOORD0;
         float2 UV1 : TEXCOORD1;
+        float2 UV2 : TEXCOORD2;
     };
 
     // Vertex Shader Output //
@@ -202,6 +209,7 @@
 
         float2 UV0 : TEXCOORD0;
         float2 UV1 : TEXCOORD1;
+        float2 UV2 : TEXCOORD2;
     };
 
     /////////////////////////////////////////////////////////////////////////////
@@ -253,6 +261,7 @@
             OUT.UV0 = IN.UV0;
             OUT.UV1 = IN.UV1;
         #endif
+        OUT.UV2 = IN.UV2;
         return OUT;
     }
 
@@ -289,7 +298,11 @@
         float3 specular = pow(saturate(dot(v, n)), 10);
 
         float3 finalColor;
-        finalColor = (diffuse) * outline;   
+        finalColor = (diffuse) * outline;
+
+        if (_EnableUV2Check)
+            finalColor = float3(IN.UV2, 1.0f);
+
         return float4(finalColor, 1.0f);
     }
 
