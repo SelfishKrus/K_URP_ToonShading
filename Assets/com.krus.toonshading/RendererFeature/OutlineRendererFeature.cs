@@ -183,8 +183,8 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
 
         public void Dispose()
         {
-            rtCustomColor.Release();
-            rtTempColor.Release();
+            // rtCustomColor.Release();
+            // rtTempColor.Release();
         }
     }
 }

@@ -75,7 +75,8 @@ Shader "Blit/Outline"
                 };
 
                 float depth = SampleSceneDepth(input.texcoord.xy).r;
-                depth = Linear01Depth(depth, _ZBufferParams);
+                float depth01 = Linear01Depth(depth, _ZBufferParams);
+                float depthDist = LinearEyeDepth(depth, _ZBufferParams);
 
                 #ifdef _DEPTH_OUTLINE
 
