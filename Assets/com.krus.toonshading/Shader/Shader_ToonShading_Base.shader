@@ -4,10 +4,12 @@ Shader "Krus/ToonShading"
     {   
         [Toggle(_UV2_CHECK)] _UV2_CHECK ("UV2 Check", float) = 0
         [Toggle(_MAT_OVERRIDE)] _MAT_OVERRIDE ("Material Override", float) = 0
+        _NormalSmoothness ("Normal Smoothness", Range(0, 1)) = 0
 
         [Header(Outline)]
-        _OutlineOffset ("Outline Offset", Range(0, 0.05)) = 0.01
+        _OutlineOffset ("Outline Offset", Range(0, 0.1)) = 0.01
         _OutlineColor ("Outline Color", Color) = (0, 0, 0, 1)
+        [Toggle(_TEX_LINES)]_TexLines ("Tex Lines", float) = 1
         [Toggle(_UV_LINES)]_UVLines ("UV Lines", float) = 1
         [Space(10)]
 
@@ -63,6 +65,18 @@ Shader "Krus/ToonShading"
             n.xy += n.xy >= 0.0 ? -t : t;
             return normalize( n );
         }
+
+        float3 TransformMayaToUnity(float3 vec)
+        {   
+            // float3x3 matrix_maya2unity = float3x3(
+            //     -1,0,0,
+            //     0,0,1,
+            //     0,-1,0
+            // );
+            // return mul(matrix_maya2unity, vec);
+
+            return float3(-vec.x, vec.z, -vec.y);
+        }
         ENDHLSL
 
         Pass
@@ -109,7 +123,7 @@ Shader "Krus/ToonShading"
 
                 float3 posOS = IN.posOS.xyz;
                 float3 smoothNormalOS = Decode(IN.uv2);
-                smoothNormalOS.x = -smoothNormalOS.x;   // Swap x due to the coord difference between unity and maya
+                smoothNormalOS = TransformMayaToUnity(smoothNormalOS);
                 posOS += _OutlineOffset * smoothNormalOS;
 
                 OUT.pos = TransformObjectToHClip(posOS);
@@ -128,7 +142,8 @@ Shader "Krus/ToonShading"
 
 
         Pass
-        {
+        {   
+            Name "ToonShading"
             Tags {"LightMode"="UniversalForward" "Queue"="Geometry"}
             ZWrite On
 
@@ -142,6 +157,7 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _RIM_SPECULAR_SWITCH
             #pragma multi_compile _ _UV_LINES
+            #pragma multi_compile _ _TEX_LINES
             #pragma multi_compile _ _UV2_CHECK
             #pragma multi_compile _ _MAT_OVERRIDE
 
@@ -176,6 +192,8 @@ Shader "Krus/ToonShading"
             };
 
             CBUFFER_START(UnityPerMaterial)
+            float _NormalSmoothness;
+
             float4 _BaseTex_ST;
 
             half _ShadowThreshold;
@@ -196,12 +214,13 @@ Shader "Krus/ToonShading"
             float4 _Test;
             CBUFFER_END
 
-            TEXTURE2D(_BaseTex);    SAMPLER(sampler_BaseTex);
-            TEXTURE2D(_IlmTex);     SAMPLER(sampler_IlmTex);
-            TEXTURE2D(_SSSTex);     SAMPLER(sampler_SSSTex);
-            TEXTURE2D(_DetailTex);  SAMPLER(sampler_DetailTex);
-
- 
+            TEXTURE2D(_BaseTex);            SAMPLER(sampler_BaseTex);
+            TEXTURE2D(_IlmTex);             SAMPLER(sampler_IlmTex);
+            TEXTURE2D(_SSSTex);             SAMPLER(sampler_SSSTex);
+            TEXTURE2D(_DetailTex);          SAMPLER(sampler_DetailTex);
+            // remap texture
+            // diffuse - 0
+            TEXTURE2D(_CurveTexture); SAMPLER(sampler_CurveTexture);
 
             v2f vert (appdata v)
             {
@@ -210,7 +229,13 @@ Shader "Krus/ToonShading"
                 o.uv01.xy = v.uv0;
                 o.uv01.zw = v.uv1;
                 o.uv2 = v.uv2;
-                o.normalWS = TransformObjectToWorldNormal(v.normalOS);
+
+                float3 smoothNormalOS = Decode(v.uv2);
+                smoothNormalOS = TransformMayaToUnity(smoothNormalOS);
+                float3 normalOS = lerp(v.normalOS, smoothNormalOS, _NormalSmoothness);
+                // normalOS = normalize(normalOS);
+
+                o.normalWS = TransformObjectToWorldNormal(normalOS);
                 o.posWS = TransformObjectToWorld(v.posOS.xyz);
                 o.shadowCoord = TransformWorldToShadowCoord(o.posWS);
                 o.tangentWS = TransformObjectToWorldDir(v.tangentOS);
@@ -246,7 +271,10 @@ Shader "Krus/ToonShading"
                 #ifdef _RECEIVE_SHADOWS
                     isBright *= mainLight.shadowAttenuation;
                 #endif
+                isBright = lerp(0.01, 0.99, isBright);
                 isBright = smoothstep(_ShadowThreshold-_ShadowSmoothness, _ShadowThreshold+_ShadowSmoothness, isBright);
+                // remap to curve texture
+                // isBright = SAMPLE_TEXTURE2D(_CurveTexture, sampler_CurveTexture, float2(isBright, 0)).r;
                 half3 diffuse = lerp(sssCol*_DarkCol, baseCol*_BrightCol, isBright) * mainLight.color;
 
                 // Specular //
@@ -281,24 +309,29 @@ Shader "Krus/ToonShading"
 
                 // Outline //
                 // sketch 
-                half outline = detailTex;
-                // uv lines
+                half outline = 1;
+                #ifdef _TEX_LINES
+                    outline = detailTex;
+                #endif
+
                 #ifdef _UV_LINES
                     outline *= ilmTex.a;
                 #endif
-                // post process outline
 
+                // Final Color
                 half3 col;
                 col = diffuse + specular + rimSpecular;
-                
                 col *= outline;
 
+
+                // Examination
                 #ifdef _UV2_CHECK
                     col = float3(i.uv2, 1);
                 #endif
 
                 #ifdef _MAT_OVERRIDE
                     col = 1;
+                    col *= isBright;
                     col *= outline;
                 #endif
 
