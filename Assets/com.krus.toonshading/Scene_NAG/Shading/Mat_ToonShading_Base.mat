@@ -27,6 +27,7 @@ Material:
   m_ValidKeywords:
   - _MAT_OVERRIDE
   - _RIM_SPECULAR_SWITCH
+  - _TEX_LINES
   - _UV_LINES
   m_InvalidKeywords:
   - _DETAIL_LINES_ON
@@ -134,6 +135,7 @@ Material:
     - _GlossyReflections: 0
     - _MAT_OVERRIDE: 1
     - _Metallic: 0
+    - _NormalSmoothness: 0
     - _OcclusionStrength: 1
     - _OutlineOffset: 0.002
     - _Parallax: 0.005
@@ -154,6 +156,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _TexLines: 1
     - _UV2_CHECK: 0
     - _UVLines: 1
     - _WorkflowMode: 1
