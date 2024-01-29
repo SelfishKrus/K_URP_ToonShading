@@ -38,9 +38,10 @@ Shader "Krus/ToonShading"
         _RimSpecularSmoothness ("Rim Specular Smoothness", Float) = 0.05
         _RimSpecularCol ("Rim Specular Color", Color) = (1, 1, 1, 1)
         [Space(10)]
-
+        
         [Header(Shadow)]
         [Toggle(_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
+        _ShadowPatternTex ("Shadow Pattern Texture", 2D) = "" {}
         
         [Space(10)]
         _Test ("Test", Vector) = (0,0,0,0)

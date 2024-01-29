@@ -56,6 +56,8 @@
     TEXTURE2D(_SSSTex);             SAMPLER(sampler_SSSTex);
     TEXTURE2D(_DetailTex);          SAMPLER(sampler_DetailTex);
 
+    TEXTURE2D(_ShadowPatternTex);   SAMPLER(sampler_ShadowPatternTex);
+
     v2f vert_toonShading (appdata v)
     {
         v2f o;
@@ -78,7 +80,7 @@
         return o;
     }
 
-    half4 frag_toonShading (v2f i) : SV_Target
+        half4 frag_toonShading (v2f i) : SV_Target
     {   
         // ARGS
         Light mainLight = GetMainLight(i.shadowCoord);
@@ -110,6 +112,13 @@
         // remap to curve texture
         isBright = SAMPLE_TEXTURE2D(_CurveTexture, sampler_CurveTexture, float2(isBright, 0)).r;
         half3 diffuse = lerp(sssCol*_DarkCol, baseCol*_BrightCol, isBright) * mainLight.color;
+
+        // custom shadow pattern
+        half3 shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, i.uv01.xy * 30).rgb;
+        bool dark = (isBright < 0.1);
+        bool gray = (isBright >= 0.1 && isBright < 0.7);
+        bool bright = (isBright >= 0.7);
+        diffuse = bright + shadowPattern.g * gray + shadowPattern.b * dark;
 
         // Specular //
         // feature toggles
@@ -165,6 +174,7 @@
             col = 1;
             col *= isBright;
             col *= outline;
+            col = diffuse;
         #endif
 
         return half4(col, 1);
