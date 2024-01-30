@@ -31,7 +31,7 @@
     float3 GetTriplanarWeights (float3 normal, float blendOffset)
     {   
         float3 triW = abs(normal);
-        triW = max(triW - blendOffset, 0.001);
+        triW = saturate(triW - blendOffset);
         // triW.x + triW.y + triW.z = 1
         return triW / (triW.x + triW.y + triW.z);
     }

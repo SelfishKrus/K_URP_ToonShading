@@ -96,6 +96,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0d1d6aa5aa96c6347a6001d4e04e0d7d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowPatternTex:
+        m_Texture: {fileID: 2800000, guid: 8302ed87d226d7641a69a2927cef9db4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -172,5 +176,5 @@ Material:
     - _RimSpecularCol_Dark: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularCol: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
-    - _Test: {r: 0, g: 0, b: 0, a: 0}
+    - _Test: {r: 1, g: 1.05, b: 0.24, a: 0}
   m_BuildTextureStacks: []

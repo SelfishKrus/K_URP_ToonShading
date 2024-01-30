@@ -97,6 +97,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: cae494e0d0d4f20469c47d7e68b6a8c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowPatternTex:
+        m_Texture: {fileID: 2800000, guid: a65f175e70aec2e4d83cf81629af3986, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -115,8 +119,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AO: 2.4
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _BaseLight: 0.35
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -153,6 +159,7 @@ Material:
     - _SpecularHighlights: 1
     - _SpecularSmoothness: 0.01
     - _SpecularThreshold: 0.15
+    - _SquashAmount: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
@@ -173,5 +180,7 @@ Material:
     - _RimSpecularCol_Dark: {r: 1, g: 0.5254902, b: 0.6007628, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularCol: {r: 0.3679245, g: 0.2871572, b: 0.26230735, a: 1}
-    - _Test: {r: 1, g: 1.42, b: -3.6, a: 0}
+    - _Test: {r: 5.2, g: 1, b: 0, a: 0}
+    - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

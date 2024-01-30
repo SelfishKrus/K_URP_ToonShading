@@ -3,7 +3,17 @@ guid: 76166281dac7acd4c8193868898d504e
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DXS_NAG_Base
+    second: {fileID: 2100000, guid: ce9919abde5b9df439580293295ca2cc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DXS_NAG_W
+    second: {fileID: 2100000, guid: 7caed509d0b12d946a571a1d5d04becc, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
