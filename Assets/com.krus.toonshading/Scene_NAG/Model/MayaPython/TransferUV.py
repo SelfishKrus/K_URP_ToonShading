@@ -42,13 +42,16 @@ def TransferUVs():
     # print(selectList.getDagPath(0))
     # print(sourceMesh)
 
-    srcUVs = sourceMesh.getUVs(uvSet=sourceUVName)
-    targetMesh.setUVs(srcUVs[0], srcUVs[1], uvSet=targetUVName)
-
-    uvCounts, uvIds = sourceMesh.getAssignedUVs(uvSet=targetUVName)
-    print(uvCounts, uvIds)
-    targetMesh.assignUVs(uvCounts, uvIds, uvSet=targetUVName)
+    srcUVs = cmds.polyListComponentConversion(source, fromVertex=True, toUV=True)
+    srcUVs = cmds.ls(srcUVs, flatten=True)  # Flatten the list
+    srcUVValues = [cmds.polyEditUV(uv, query=True) for uv in srcUVs]
     
+    targetUVs = cmds.polyListComponentConversion(target, fromVertex=True, toUV=True)
+    targetUVs = cmds.ls(targetUVs, flatten=True)  # Flatten the list
+
+    
+    for i in range(len(targetUVs)):
+        cmds.polyEditUV(targetUVs[i], u=srcUVValues[i][0], v=srcUVValues[i][1])
     
 if __name__ == "__main__":
     sourceUVName, targetUVName = GetUVSetNames()

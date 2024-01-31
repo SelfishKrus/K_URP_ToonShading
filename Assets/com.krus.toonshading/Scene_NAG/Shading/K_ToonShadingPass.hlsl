@@ -7,6 +7,7 @@
         float2 uv0 : TEXCOORD0;
         float2 uv1 : TEXCOORD1;
         float2 uv2 : TEXCOORD2;
+        float2 uv3 : TEXCOORD3;
         float3 normalOS : NORMAL;
         float4 tangentOS : TANGENT;
         half4 color : COLOR;
@@ -17,9 +18,10 @@
         float4 pos : SV_POSITION;
         float4 uv01 : TEXCOORD0;
         float2 uv2 : TEXCOORD1;
-        float3 normalWS : TEXCOORD2;
-        float3 posWS : TEXCOORD3;
-        float4 shadowCoord : TEXCOORD4;
+        float2 uv3 : TEXCOORD2;
+        float3 normalWS : TEXCOORD3;
+        float3 posWS : TEXCOORD4;
+        float4 shadowCoord : TEXCOORD5;
         half4 color : COLOR;
     };
 
@@ -64,6 +66,7 @@
         o.uv01.xy = v.uv0;
         o.uv01.zw = v.uv1;
         o.uv2 = v.uv2;
+        o.uv3 = v.uv3;
 
         float3 smoothNormalOS = Decode(v.uv2);
         smoothNormalOS = TransformMayaToUnity(smoothNormalOS);
@@ -115,8 +118,8 @@
         // custom shadow pattern //
         float3 posOS = TransformWorldToObject(i.posWS);
 
-        // half3 shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, i.uv01.xy * _Test.x).rgb;
-        half3 shadowPattern = TriplanarSampling(_ShadowPatternTex, sampler_ShadowPatternTex, i.normalWS, i.posWS, _Test.xy, _Test.z).rgb;
+        half3 shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, i.uv3.xy * _Test.x).rgb;
+        // half3 shadowPattern = TriplanarSampling(_ShadowPatternTex, sampler_ShadowPatternTex, i.normalWS, i.posWS, _Test.xy, _Test.z).rgb;
         // bool lum_0 = (isBright < 0.1);
         // bool lum_1 = (isBright > 0.2 && isBright < 0.4);
         // bool lum_2 = (isBright >0.5 && isBright < 0.7);
