@@ -8,7 +8,7 @@
         float2 uv1 : TEXCOORD1;
         float2 uv2 : TEXCOORD2;
         float3 normalOS : NORMAL;
-        float3 tangentOS : TANGENT;
+        float4 tangentOS : TANGENT;
         half4 color : COLOR;
     };
 
@@ -20,7 +20,6 @@
         float3 normalWS : TEXCOORD2;
         float3 posWS : TEXCOORD3;
         float4 shadowCoord : TEXCOORD4;
-        float3 tangentWS : TEXCOORD5;
         half4 color : COLOR;
     };
 
@@ -74,8 +73,8 @@
         o.normalWS = TransformObjectToWorldNormal(normalOS);
         o.posWS = TransformObjectToWorld(v.posOS.xyz);
         o.shadowCoord = TransformWorldToShadowCoord(o.posWS);
-        o.tangentWS = TransformObjectToWorldDir(v.tangentOS);
         // VERTEX COLOR: r - AO; g - position ID; b - ?; a - outline thickness
+
         o.color = v.color;
         return o;
     }
@@ -114,6 +113,7 @@
         half3 diffuse = lerp(sssCol*_DarkCol, baseCol*_BrightCol, isBright) * mainLight.color;
 
         // custom shadow pattern //
+        float3 posOS = TransformWorldToObject(i.posWS);
 
         // half3 shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, i.uv01.xy * _Test.x).rgb;
         half3 shadowPattern = TriplanarSampling(_ShadowPatternTex, sampler_ShadowPatternTex, i.normalWS, i.posWS, _Test.xy, _Test.z).rgb;
@@ -127,7 +127,8 @@
         float3 customOutput;
         float illum = NoL01 - 0.1;
         
-        customOutput = step(shadowPattern.r, illum);
+        // customOutput = step(shadowPattern.r, illum);
+        customOutput = shadowPattern.r;
 
         // Specular //
         // feature toggles
