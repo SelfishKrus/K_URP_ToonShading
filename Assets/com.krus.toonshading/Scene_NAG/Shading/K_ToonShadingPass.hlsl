@@ -131,7 +131,8 @@
         float illum = NoL01 - 0.1;
         
         // customOutput = step(shadowPattern.r, illum);
-        customOutput = shadowPattern.r;
+        customOutput = 1 - step(isBright,  shadowPattern.r * 0.9);
+        customOutput = isBright;
 
         // Specular //
         // feature toggles
