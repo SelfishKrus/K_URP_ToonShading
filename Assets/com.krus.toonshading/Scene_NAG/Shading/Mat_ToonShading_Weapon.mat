@@ -140,7 +140,7 @@ Material:
     - _Metallic: 0
     - _NormalSmoothness: 0.5
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.0043
+    - _OutlineOffset: 0.0062
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
