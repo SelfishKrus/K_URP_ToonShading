@@ -82,7 +82,7 @@
         return o;
     }
 
-        half4 frag_toonShading (v2f i) : SV_Target
+    half4 frag_toonShading (v2f i) : SV_Target
     {   
         // ARGS
         Light mainLight = GetMainLight(i.shadowCoord);
@@ -117,22 +117,6 @@
 
         // custom shadow pattern //
         float3 posOS = TransformWorldToObject(i.posWS);
-
-        half3 shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, i.uv3.xy * _Test.x).rgb;
-        // half3 shadowPattern = TriplanarSampling(_ShadowPatternTex, sampler_ShadowPatternTex, i.normalWS, i.posWS, _Test.xy, _Test.z).rgb;
-        // bool lum_0 = (isBright < 0.1);
-        // bool lum_1 = (isBright > 0.2 && isBright < 0.4);
-        // bool lum_2 = (isBright >0.5 && isBright < 0.7);
-        // bool lum_3 = (isBright > 0.9);
-        // diffuse = lum_3 * 1 + (lum_2 * shadowPattern.r, ) + lum_1 * shadowPattern.g + lum_0 * 0;
-        // diffuse = lum_2 + lum_1;
-        
-        float3 customOutput;
-        float illum = NoL01 - 0.1;
-        
-        // customOutput = step(shadowPattern.r, illum);
-        customOutput = 1 - step(isBright,  shadowPattern.r * 0.9);
-        customOutput = isBright;
 
         // Specular //
         // feature toggles
@@ -188,7 +172,6 @@
             col = 1;
             col *= isBright;
             col *= outline;
-            col = customOutput;
         #endif
 
         return half4(col, 1);

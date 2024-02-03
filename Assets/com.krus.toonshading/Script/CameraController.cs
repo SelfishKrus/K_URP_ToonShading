@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
-    public float speed = 10.0f;
+    public float speed = 5.0f;
     public float mouseSensitivity = 2.0f;
     
     bool isActive = false;
