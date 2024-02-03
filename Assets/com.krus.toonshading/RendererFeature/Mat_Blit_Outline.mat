@@ -29,14 +29,16 @@ Material:
     m_Floats:
     - _Depth_Outline: 1
     - _Depth_Smoothness: 0
-    - _Depth_Thickness: 0.0005
-    - _Depth_Threshold: 0.9
-    - _Normal_Bias: 0.14
+    - _Depth_Thickness: 0.0012
+    - _Depth_Threshold: 0.909
+    - _Normal_Bias: 0.144
     - _Normal_Outline: 1
-    - _Normal_Smoothness: 0.05
-    - _Normal_Thickness: 0.0003
-    - _Normal_Threshold: 0.95
+    - _Normal_Smoothness: 0.081
+    - _Normal_Thickness: 0.0012
+    - _Normal_Threshold: 0.86
     m_Colors:
     - _Depth_OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _Normal_OutlineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _Test: {r: 1000, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

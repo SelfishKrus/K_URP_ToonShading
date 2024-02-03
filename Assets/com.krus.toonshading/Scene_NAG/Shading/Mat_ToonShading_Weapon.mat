@@ -140,7 +140,7 @@ Material:
     - _Metallic: 0
     - _NormalSmoothness: 0.5
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.002
+    - _OutlineOffset: 0.0043
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -178,3 +178,4 @@ Material:
     - _SpecularCol: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
     - _Test: {r: 2, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

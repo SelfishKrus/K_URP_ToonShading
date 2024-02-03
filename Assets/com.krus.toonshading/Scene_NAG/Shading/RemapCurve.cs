@@ -1,59 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class RemapCurve : MonoBehaviour
 {   
-    private Material material;
-    private Texture2D curveTexture;
-
-    private int numCurve;
-    public AnimationCurve shadowCurve;
-
-    public RenderTexture renderTexture;
-
-    void OnValidate ()
-    {   
-        Main();
-    }
-
-    
-    void Main()
-    {
-        // Pre
-        material = GetComponent<Renderer>().sharedMaterial ;
-        if (material == null)
-        {
-            Debug.Log("Material not found");
-            return;
-        }
-
-        List<AnimationCurve> curves = new List<AnimationCurve>();
-        curves.Add(shadowCurve);
-
-        numCurve = curves.Count;
-        
-        // Initialize textre
-        curveTexture = new Texture2D(256, numCurve, TextureFormat.RFloat, false);
-        curveTexture.filterMode = FilterMode.Bilinear;
-        curveTexture.wrapMode = TextureWrapMode.Clamp;
-
-        // Write curves to texture
-        UpdateCurveTexture(shadowCurve, 0);
-
-        // Pass texture to shader
-        material.SetTexture("_CurveTexture", curveTexture);
-
-        // Display texture
-        #if UNITY_EDITOR
-            UpdateRenderTexture();
-        #endif
-    }
-
-
-    // Write curve to texture
-    void UpdateCurveTexture(AnimationCurve curve, int yIndex)
+    protected virtual void UpdateCurveTexture(Texture2D curveTexture, AnimationCurve curve, int yIndex)
     {
         if (curve == null)
         {
@@ -71,9 +22,10 @@ public class RemapCurve : MonoBehaviour
         curveTexture.Apply();
     }
 
-    // Display texture
-    void UpdateRenderTexture()
+    protected virtual void CreateCurveTexture(Texture2D curveTexture, int numCurve)
     {
-        Graphics.Blit(curveTexture, renderTexture);
+        curveTexture.filterMode = FilterMode.Bilinear;
+        curveTexture.wrapMode = TextureWrapMode.Clamp;
     }
+
 }

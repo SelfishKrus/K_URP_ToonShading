@@ -51,6 +51,7 @@
     // remap texture
     // diffuse - 0
     TEXTURE2D(_CurveTexture); SAMPLER(sampler_CurveTexture);
+    int _Id_ShadowCurve;
 
     TEXTURE2D(_BaseTex);            SAMPLER(sampler_BaseTex);
     TEXTURE2D(_IlmTex);             SAMPLER(sampler_IlmTex);
@@ -112,7 +113,7 @@
         isBright = lerp(0.01, 0.99, isBright);
         // isBright = smoothstep(_ShadowThreshold-_ShadowSmoothness, _ShadowThreshold+_ShadowSmoothness, isBright);
         // remap to curve texture
-        isBright = SAMPLE_TEXTURE2D(_CurveTexture, sampler_CurveTexture, float2(isBright, 0)).r;
+        isBright = SAMPLE_TEXTURE2D(_CurveTexture, sampler_CurveTexture, float2(isBright, _Id_ShadowCurve)).r;
         half3 diffuse = lerp(sssCol*_DarkCol, baseCol*_BrightCol, isBright) * mainLight.color;
 
         // custom shadow pattern //
@@ -156,7 +157,7 @@
         #endif
 
         #ifdef _UV_LINES
-            outline *= ilmTex.a;
+            outline = ilmTex.a;
         #endif
 
         // Final Color
@@ -170,7 +171,6 @@
 
         #ifdef _MAT_OVERRIDE
             col = 1;
-            col *= isBright;
             col *= outline;
         #endif
 

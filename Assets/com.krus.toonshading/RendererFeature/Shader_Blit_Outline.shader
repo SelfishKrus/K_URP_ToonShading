@@ -16,6 +16,9 @@ Shader "Blit/Outline"
         _Normal_Smoothness("Normal Smoothness", Range(0, 1)) = 0.5
         _Normal_OutlineColor("Normal Outline Color", Color) = (0, 0, 0, 0)
         _Normal_Bias("Normal Bias", Range(0, 1)) = 0.1
+
+        [Space(30)]
+        _Test ("Test", Vector) = (1,1,1,1)
     }
 
     SubShader
@@ -44,6 +47,10 @@ Shader "Blit/Outline"
             #pragma multi_compile _ _NORMAL_OUTLINE
 
             TEXTURE2D_X(_CamColTex);        SAMPLER(sampler_CamColTex);
+            TEXTURE2D(_CurveTexture);       SAMPLER(sampler_CurveTexture);
+
+            int _Id_DepthOutlineCurve;
+            int _Id_NormalOutlineCurve;
 
             float _Depth_Threshold;
             float _Depth_Thickness;
@@ -55,6 +62,8 @@ Shader "Blit/Outline"
             float _Normal_Smoothness;
             float3 _Normal_OutlineColor;
             float _Normal_Bias;
+
+            float4 _Test;
 
             half4 frag (Varyings input) : SV_Target
             {
@@ -88,7 +97,8 @@ Shader "Blit/Outline"
                     {
                         half2 offset = half2(i % 3, i / 3) - half2(1, 1);
                         half depthOffset = SampleSceneDepth(input.texcoord.xy + offset * _Depth_Thickness).r;
-                        depthOffset = Linear01Depth(depthOffset, _ZBufferParams);
+                        depthOffset = LinearEyeDepth(depthOffset, _ZBufferParams);
+                        depthOffset = saturate(depthOffset / _Test.x);
                         edgeX_depth += depthOffset * Gx[i];
                         edgeY_depth += depthOffset * Gy[i];
                     };

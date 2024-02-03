@@ -32,7 +32,7 @@
         float3 posOS = IN.posOS.xyz;
         float3 smoothNormalOS = Decode(IN.uv2);
         smoothNormalOS = TransformMayaToUnity(smoothNormalOS);
-        posOS += _OutlineOffset * smoothNormalOS;
+        posOS += _OutlineOffset * IN.normalOS;
 
         OUT.pos = TransformObjectToHClip(posOS);
         return OUT;
