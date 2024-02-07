@@ -650,6 +650,11 @@ PrefabInstance:
       propertyPath: m_UpdateWhenOffscreen
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7419531271022638609, guid: 84211760c2993154ab812b938c9f2cda,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
