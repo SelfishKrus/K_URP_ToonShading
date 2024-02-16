@@ -141,7 +141,7 @@ Material:
     - _NdcOutline: 1
     - _NormalSmoothness: 0.5
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.4
+    - _OutlineOffset: 0.35
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1

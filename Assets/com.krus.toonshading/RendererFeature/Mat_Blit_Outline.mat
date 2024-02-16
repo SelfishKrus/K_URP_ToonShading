@@ -13,7 +13,6 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DEPTH_OUTLINE
-  - _NORMAL_OUTLINE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -32,11 +31,11 @@ Material:
     - _Depth_Smoothness: 0
     - _Depth_Thickness: 0.00068
     - _Depth_Threshold: 0.99
-    - _Normal_Bias: 0.031
-    - _Normal_Outline: 1
-    - _Normal_Smoothness: 0.066
-    - _Normal_Thickness: 0.00067
-    - _Normal_Threshold: 0.82
+    - _Normal_Bias: 0.096
+    - _Normal_Outline: 0
+    - _Normal_Smoothness: 0.025
+    - _Normal_Thickness: 0.00033
+    - _Normal_Threshold: 1
     m_Colors:
     - _Depth_OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _Normal_OutlineColor: {r: 0, g: 0, b: 0, a: 0}

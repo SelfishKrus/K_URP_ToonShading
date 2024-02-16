@@ -28,6 +28,8 @@ Material:
   - _MAT_OVERRIDE
   - _NDC_OUTLINE
   - _RIM_SPECULAR_SWITCH
+  - _TEX_LINES
+  - _UV_LINES
   m_InvalidKeywords:
   - _DETAIL_LINES_ON
   m_LightmapFlags: 4
@@ -143,7 +145,7 @@ Material:
     - _NdcOutline: 1
     - _NormalSmoothness: 0
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.4
+    - _OutlineOffset: 0.35
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 0
@@ -163,9 +165,9 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TexLines: 0
+    - _TexLines: 1
     - _UV2_CHECK: 0
-    - _UVLines: 0
+    - _UVLines: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
