@@ -26,6 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _MAT_OVERRIDE
+  - _NDC_OUTLINE
   - _RIM_SPECULAR_SWITCH
   m_InvalidKeywords:
   - _DETAIL_LINES_ON
@@ -139,9 +140,10 @@ Material:
     - _GlossyReflections: 0
     - _MAT_OVERRIDE: 1
     - _Metallic: 0
+    - _NdcOutline: 1
     - _NormalSmoothness: 0
     - _OcclusionStrength: 1
-    - _OutlineOffset: 0.002
+    - _OutlineOffset: 0.4
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 0

@@ -6,6 +6,7 @@ Shader "Blit/Outline"
         _Depth_Threshold("Depth Threshold", Range(0, 1)) = 0.75
         _Depth_Thickness("Depth Thickness", Range(0, 0.01)) = 0.01
         _Depth_Smoothness("Depth Smoothness", Range(0, 1)) = 0.5
+        _Depth_FarPlaneDistance("Far-Plane Distance", Float) = 100
         _Depth_OutlineColor("Depth Outline Color", Color) = (0, 0, 0, 0)
 
         [Space(30)]
@@ -55,6 +56,7 @@ Shader "Blit/Outline"
             float _Depth_Threshold;
             float _Depth_Thickness;
             float _Depth_Smoothness;
+            float _Depth_FarPlaneDistance;
             float3 _Depth_OutlineColor;
 
             float _Normal_Threshold;
@@ -98,7 +100,7 @@ Shader "Blit/Outline"
                         half2 offset = half2(i % 3, i / 3) - half2(1, 1);
                         half depthOffset = SampleSceneDepth(input.texcoord.xy + offset * _Depth_Thickness).r;
                         depthOffset = LinearEyeDepth(depthOffset, _ZBufferParams);
-                        depthOffset = saturate(depthOffset / _Test.x);
+                        depthOffset = saturate(depthOffset / _Depth_FarPlaneDistance);     // 1000 = far-plane distance
                         edgeX_depth += depthOffset * Gx[i];
                         edgeY_depth += depthOffset * Gy[i];
                     };

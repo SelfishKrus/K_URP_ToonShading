@@ -11,7 +11,9 @@ Material:
   m_Shader: {fileID: 4800000, guid: 926b16f8b89b10c4f941ae08c9abf231, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _DEPTH_OUTLINE
+  - _NORMAL_OUTLINE
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -25,18 +27,19 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Depth_Outline: 0
+    - _Depth_FarPlaneDistance: 100
+    - _Depth_Outline: 1
     - _Depth_Smoothness: 0
-    - _Depth_Thickness: 0.0012
-    - _Depth_Threshold: 0.909
-    - _Normal_Bias: 0.144
-    - _Normal_Outline: 0
-    - _Normal_Smoothness: 0.081
-    - _Normal_Thickness: 0.0012
-    - _Normal_Threshold: 0.86
+    - _Depth_Thickness: 0.00068
+    - _Depth_Threshold: 0.99
+    - _Normal_Bias: 0.031
+    - _Normal_Outline: 1
+    - _Normal_Smoothness: 0.066
+    - _Normal_Thickness: 0.00067
+    - _Normal_Threshold: 0.82
     m_Colors:
     - _Depth_OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _Normal_OutlineColor: {r: 0, g: 0, b: 0, a: 0}
-    - _Test: {r: 1000, g: 1, b: 1, a: 1}
+    - _Test: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

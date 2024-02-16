@@ -153,11 +153,11 @@
         // sketch 
         half outline = 1;
         #ifdef _TEX_LINES
-            outline = detailTex;
+            outline *= detailTex;
         #endif
 
         #ifdef _UV_LINES
-            outline = ilmTex.a;
+            outline *= ilmTex.a;
         #endif
 
         // Final Color
@@ -177,4 +177,11 @@
         return half4(col, 1);
         
     }
+
+    half4 frag_monochromeShading (v2f IN) : SV_Target
+    {
+        half3 finalCol = 1;
+        return half4(finalCol, 1);
+    }
+
     #endif

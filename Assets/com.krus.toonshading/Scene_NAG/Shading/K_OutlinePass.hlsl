@@ -29,12 +29,17 @@
     {
         v2f OUT;
 
-        float3 posOS = IN.posOS.xyz;
-        float3 smoothNormalOS = Decode(IN.uv2);
-        smoothNormalOS = TransformMayaToUnity(smoothNormalOS);
-        posOS += _OutlineOffset * IN.normalOS;
+        #ifdef _NDC_OUTLINE
+            OUT.pos = TransformObjectToHClip(IN.posOS);
+            float3 normal = mul((float3x3)UNITY_MATRIX_IT_MV, IN.normalOS);
+			float2 extendDir = normalize(mul((float3x3)UNITY_MATRIX_P, normal.xy));
+            OUT.pos.xy += _OutlineOffset * extendDir * OUT.pos.w * 0.01;
+        #else
+            float3 posOS = IN.posOS.xyz;
+            posOS += _OutlineOffset * IN.normalOS;
+            OUT.pos = TransformObjectToHClip(posOS);
+        #endif
 
-        OUT.pos = TransformObjectToHClip(posOS);
         return OUT;
     }
 

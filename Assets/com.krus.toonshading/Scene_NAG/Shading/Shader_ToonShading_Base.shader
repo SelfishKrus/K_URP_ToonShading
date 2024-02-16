@@ -7,10 +7,11 @@ Shader "Krus/ToonShading"
         _NormalSmoothness ("Normal Smoothness", Range(0, 1)) = 0
 
         [Header(Outline)]
-        _OutlineOffset ("Outline Offset", Range(0, 0.1)) = 0.01
+        _OutlineOffset ("Outline Offset", Range(0, 1)) = 0.01
         _OutlineColor ("Outline Color", Color) = (0, 0, 0, 1)
         [Toggle(_TEX_LINES)]_TexLines ("Tex Lines", float) = 1
         [Toggle(_UV_LINES)]_UVLines ("UV Lines", float) = 1
+        [Toggle(_NDC_OUTLINE)]_NdcOutline ("NDC Outline", float) = 1
         [Space(10)]
 
         [Header(Toon Shading)]
@@ -90,9 +91,6 @@ Shader "Krus/ToonShading"
             ZWrite On
 
             HLSLPROGRAM
-            #pragma vertex vert_toonShading
-            #pragma fragment frag_toonShading
-
             #pragma multi_compile _ _RECEIVE_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
@@ -102,6 +100,13 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _TEX_LINES
             #pragma multi_compile _ _UV2_CHECK
             #pragma multi_compile _ _MAT_OVERRIDE
+
+            #pragma vertex vert_toonShading
+            #ifdef _MAT_OVERRIDE
+                #pragma fragment frag_monochromeShading
+            #else 
+                #pragma fragment frag_toonShading
+            #endif
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -128,6 +133,8 @@ Shader "Krus/ToonShading"
             
             #pragma vertex vert
             #pragma fragment frag
+
+            #pragma multi_compile _ _NDC_OUTLINE
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
