@@ -30,7 +30,7 @@
         return mainLight.color * lightIntensity;
     }
 
-    float3 GetDiffuse_DL(ToonBrdf brdf, Light mainLight, RemapCurve curve)
+    float3 GetDiffuse_DL(ToonBrdf brdf, Light mainLight, RemapCurve curve, float shadowPattern)
     {   
         float3 incidentLight = GetIncidentLight_DL(brdf, mainLight, curve);
         return lerp(brdf.sssColor, brdf.baseColor, incidentLight);

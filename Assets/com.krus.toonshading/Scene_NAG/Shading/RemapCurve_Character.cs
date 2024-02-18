@@ -4,6 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class RemapCurve_Character : RemapCurve
 {   
     public Material material;
@@ -15,6 +16,19 @@ public class RemapCurve_Character : RemapCurve
     public AnimationCurve shadowCurve;
 
     public RenderTexture renderTexture;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnValidate();
+        }
+    }
+
+    public void ForceValidate()
+    {
+        OnValidate();
+    }
 
     void OnValidate ()
     {   

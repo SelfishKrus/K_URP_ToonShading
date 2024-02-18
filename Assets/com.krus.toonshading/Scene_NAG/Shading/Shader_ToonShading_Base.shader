@@ -121,8 +121,7 @@ Shader "Krus/ToonShading"
             #include "K_TriplanarProjection.hlsl"
             #include "K_ToonShadingPass.hlsl"
             #include "K_MonochromeShading.hlsl"
-
-
+            
             ENDHLSL
         }
 
