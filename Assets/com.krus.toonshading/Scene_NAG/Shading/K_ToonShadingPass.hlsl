@@ -83,71 +83,85 @@
         return o;
     }
 
-    half4 frag_toonShading (v2f i) : SV_Target
+    half4 frag_toonShading (v2f IN) : SV_Target
     {   
-        // ARGS
-        Light mainLight = GetMainLight(i.shadowCoord);
-        float3 V = normalize(_WorldSpaceCameraPos - i.posWS);
+        // ARGS // 
+        Light mainLight = GetMainLight(IN.shadowCoord);
+        float3 V = normalize(_WorldSpaceCameraPos - IN.posWS);
         float3 H = normalize(V + mainLight.direction);
-        half NoL = saturate(dot(i.normalWS, mainLight.direction));
-        half NoL01 = dot(i.normalWS, mainLight.direction) * 0.5 + 0.5;
-        half NoH = saturate(dot(i.normalWS, H));
-        half NoV = dot(i.normalWS, V);
+        half NoL = saturate(dot(IN.normalWS, mainLight.direction));
+        half NoL01 = dot(IN.normalWS, mainLight.direction) * 0.5 + 0.5;
+        half NoH = saturate(dot(IN.normalWS, H));
+        half NoV = dot(IN.normalWS, V);
 
-        // TEXTURES
+
+
+        // TEXTURES // 
         // _IlmTex: r - specular layer; g - shadow offset; b - specular mask; a - outline
-        half3 baseCol = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, i.uv01.xy).rgb;
-        half3 sssCol = SAMPLE_TEXTURE2D(_SSSTex, sampler_SSSTex, i.uv01.xy).rgb;
-        half4 ilmTex = SAMPLE_TEXTURE2D(_IlmTex, sampler_IlmTex, i.uv01.xy);
-        half detailTex = SAMPLE_TEXTURE2D(_DetailTex, sampler_DetailTex, i.uv01.zw).r;
+        half3 baseCol = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, IN.uv01.xy).rgb;
+        half3 sssCol = SAMPLE_TEXTURE2D(_SSSTex, sampler_SSSTex, IN.uv01.xy).rgb;
+        half4 ilmTex = SAMPLE_TEXTURE2D(_IlmTex, sampler_IlmTex, IN.uv01.xy);
+        half detailTex = SAMPLE_TEXTURE2D(_DetailTex, sampler_DetailTex, IN.uv01.zw).r;
         half shadowOffset = ilmTex.g;
-        half AO = i.color.r;
+        half AO = IN.color.r;
         half specularMask = ilmTex.b;
         half specularLayer = ilmTex.r * 255.0f;
 
+        // PRE // 
+        ToonBrdf brdf;
+        brdf.baseColor = baseCol;
+        brdf.sssColor = sssCol;
+        brdf.ao = IN.color.r;
+        brdf.normal = IN.normalWS;
+
         // Diffuse // 
-        half isBright = NoL01 * AO;
-        #ifdef _RECEIVE_SHADOWS
-            isBright *= mainLight.shadowAttenuation;
-        #endif
-        isBright = lerp(0.01, 0.99, isBright);
-        // isBright = smoothstep(_ShadowThreshold-_ShadowSmoothness, _ShadowThreshold+_ShadowSmoothness, isBright);
-        // remap to curve texture
-        isBright = SAMPLE_TEXTURE2D(_CurveTexture, sampler_CurveTexture, float2(isBright, _Id_ShadowCurve)).r;
-        half3 diffuse = lerp(sssCol*_DarkCol, baseCol*_BrightCol, isBright) * mainLight.color;
+        RemapCurve rcDiffuse;
+        rcDiffuse.curveTexture = _CurveTexture;
+        rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
+        rcDiffuse.vId = _Id_ShadowCurve;
+
+        half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
 
         // custom shadow pattern //
-        float3 posOS = TransformWorldToObject(i.posWS);
+        float3 posOS = TransformWorldToObject(IN.posWS);
 
-        // Specular //
-        // feature toggles
-        bool rimToggle = (specularLayer >= 45.0f && specularLayer <= 105.0f);
-        // hard specular for layer 50 ~ 100
-        // bool specularSmoothness = (specularLayer >= 45.0f && specularLayer <= 105.0f) ? _SpecularSmoothness : _SpecularSmoothness;
+        // DIRECT LIGHT SPECULAR //
+        #ifdef _DIRECT_LIGHT_SPECULAR
+            // feature toggles
+            bool rimToggle = (specularLayer >= 45.0f && specularLayer <= 105.0f);
+            // hard specular for layer 50 ~ 100
+            // bool specularSmoothness = (specularLayer >= 45.0f && specularLayer <= 105.0f) ? _SpecularSmoothness : _SpecularSmoothness;
 
-        // Blinn-phong specular 
-        half reflectivity = pow(NoH, _Glossiness) * specularMask;
-        reflectivity = smoothstep(_SpecularThreshold - _SpecularSmoothness, _SpecularThreshold + _SpecularSmoothness, reflectivity);
-        half3 specular = reflectivity  * mainLight.color * _SpecularCol;
-        // specular *= specularToggle;
-
-        // Rim Specular //
-        float2 L_VS = TransformWorldToViewDir(mainLight.direction).xy;
-        float2 N_VS = TransformWorldToViewDir(i.normalWS).xy;
-        float NoL_VS = (dot(N_VS, L_VS)) * 0.5 + 0.5;
-
-        #ifdef _RIM_SPECULAR_SWITCH
-            float2 UV_PS = i.pos.xy;
-            _RimSpecularWidth = lerp(0, 10, _RimSpecularWidth);
-            float2 offsetUV_PS =  UV_PS + N_VS * _RimSpecularWidth;
-            // offsetUV_PS = clamp(offsetUV_PS, 0, _ScreenParams);
-            float linearDepth = Linear01Depth(LoadSceneDepth(UV_PS), _ZBufferParams);
-            float linearDepth_offset = Linear01Depth(LoadSceneDepth(offsetUV_PS), _ZBufferParams);
-            float depthDiff = abs(linearDepth_offset - linearDepth);
-            half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness, depthDiff*NoL_VS);
+            // Blinn-phong specular 
+            half reflectivity = pow(NoH, _Glossiness) * specularMask;
+            reflectivity = smoothstep(_SpecularThreshold - _SpecularSmoothness, _SpecularThreshold + _SpecularSmoothness, reflectivity);
+            half3 specular = reflectivity  * mainLight.color * _SpecularCol;
+            // specular *= specularToggle;
         #else
-            half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness,(1-saturate(NoV)) * NoL01 );
+            half3 specular = 0;
         #endif
+
+        // RIM SPECULAR //
+        #ifdef _RIM_SPECULAR
+            float2 L_VS = TransformWorldToViewDir(mainLight.direction).xy;
+            float2 N_VS = TransformWorldToViewDir(IN.normalWS).xy;
+            float NoL_VS = (dot(N_VS, L_VS)) * 0.5 + 0.5;
+
+            #ifdef _RIM_SPECULAR_SWITCH
+                float2 UV_PS = IN.pos.xy;
+                _RimSpecularWidth = lerp(0, 10, _RimSpecularWidth);
+                float2 offsetUV_PS =  UV_PS + N_VS * _RimSpecularWidth;
+                // offsetUV_PS = clamp(offsetUV_PS, 0, _ScreenParams);
+                float linearDepth = Linear01Depth(LoadSceneDepth(UV_PS), _ZBufferParams);
+                float linearDepth_offset = Linear01Depth(LoadSceneDepth(offsetUV_PS), _ZBufferParams);
+                float depthDiff = abs(linearDepth_offset - linearDepth);
+                half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness, depthDiff*NoL_VS);
+            #else
+                half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness,(1-saturate(NoV)) * NoL01 );
+            #endif
+        #else
+            half3 rimSpecular = 0;
+        #endif 
 
         // Outline //
         // sketch 
@@ -155,7 +169,6 @@
         #ifdef _TEX_LINES
             outline *= detailTex;
         #endif
-
         #ifdef _UV_LINES
             outline *= ilmTex.a;
         #endif
@@ -166,22 +179,11 @@
         col *= outline;
 
         #ifdef _UV2_CHECK
-            col = float3(i.uv2, 1);
-        #endif
-
-        #ifdef _MAT_OVERRIDE
-            col = 1;
-            col *= outline;
+            col = float3(IN.uv2, 1);
         #endif
 
         return half4(col, 1);
         
-    }
-
-    half4 frag_monochromeShading (v2f IN) : SV_Target
-    {
-        half3 finalCol = 1;
-        return half4(finalCol, 1);
     }
 
     #endif
