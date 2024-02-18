@@ -25,6 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _NDC_OUTLINE
   - _RECEIVE_SHADOWS
   - _TEX_LINES
   - _UV_LINES
@@ -136,6 +137,7 @@ Material:
     - _GlossyReflections: 0
     - _MAT_OVERRIDE: 0
     - _Metallic: 0
+    - _NdcOutline: 1
     - _NormalSmoothness: 0
     - _OcclusionStrength: 1
     - _OutlineOffset: 0
@@ -173,3 +175,4 @@ Material:
     - _SpecularCol: {r: 1, g: 1, b: 1, a: 1}
     - _Test: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

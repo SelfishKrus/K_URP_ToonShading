@@ -25,9 +25,11 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _DIRECT_LIGHT_SPECULAR
   - _MAT_OVERRIDE
   - _NDC_OUTLINE
   - _RECEIVE_SHADOWS
+  - _RIM_SPECULAR
   - _RIM_SPECULAR_SWITCH
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -130,6 +132,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailLinesOn: 0
     - _DetailNormalMapScale: 1
+    - _DirectLightSpecular: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -145,6 +148,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RimSpecular: 1
     - _RimSpecularDetail: 0.1
     - _RimSpecularSmoothness: 0.2
     - _RimSpecularSwitch: 1

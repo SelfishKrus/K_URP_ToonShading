@@ -25,8 +25,9 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _MAT_OVERRIDE
+  - _DIRECT_LIGHT_SPECULAR
   - _NDC_OUTLINE
+  - _RIM_SPECULAR
   - _RIM_SPECULAR_SWITCH
   - _TEX_LINES
   - _UV_LINES
@@ -134,13 +135,14 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailLinesOn: 1
     - _DetailNormalMapScale: 1
+    - _DirectLightSpecular: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 5
     - _GlossyReflections: 0
-    - _MAT_OVERRIDE: 1
+    - _MAT_OVERRIDE: 0
     - _Metallic: 0
     - _NdcOutline: 1
     - _NormalSmoothness: 0
@@ -149,6 +151,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 0
+    - _RimSpecular: 1
     - _RimSpecularDetail: 0.35
     - _RimSpecularSmoothness: 0.5
     - _RimSpecularSwitch: 1
