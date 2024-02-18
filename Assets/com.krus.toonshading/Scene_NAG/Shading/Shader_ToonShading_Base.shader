@@ -16,8 +16,8 @@ Shader "Krus/ToonShading"
 
         [Header(Toon Shading)]
         _BaseTex ("Base Color Map", 2D) = "white" {}
-        _IlmTex ("Ilm Map", 2D) = "white" {}
-        _SSSTex ("SSS Map", 2D) = "white" {}
+        _IlmTex ("Ilm Map", 2D) = "blue" {}
+        _SSSTex ("SSS Map", 2D) = "black" {}
         _DetailTex ("Detail Map", 2D) = "white" {}
 
         [Header(Diffuse)]
@@ -26,13 +26,15 @@ Shader "Krus/ToonShading"
         _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.5
         _ShadowSmoothness ("Shadow Smoothness", Range(0, 1)) = 0.0
 
-        [Header(Specular)]
+        [Header(Direct Light Specular)]
+        [Toggle(_DIRECT_LIGHT_SPECULAR)]_DirectLightSpecular ("Direct Light Specular", float) = 1
         _Glossiness ("Glossiness", Float) = 5
         _SpecularThreshold ("Specular Threshold", float) = 0.35
         _SpecularSmoothness ("Specular Smoothness", float) = 0.0
         _SpecularCol ("Specular Color", Color) = (1, 1, 1, 1)
 
         [Header(Rim Specular)]
+        [Toggle(_RIM_SPECULAR)]_RimSpecular ("Rim Specular", float) = 1
         [Toggle(_RIM_SPECULAR_SWITCH)]_RimSpecularSwitch ("0 - NoV Specular, 1 - DepthDiff Specular", float) = 0
         _RimSpecularWidth ("Rim Specular Width (DepthDiff Only)", Float) = 0.65
         _RimSpecularDetail ("Rim Specular Detail", Float) = 0.35
@@ -95,6 +97,8 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile _ _DIRECT_LIGHT_SPECULAR
+            #pragma multi_compile _ _RIM_SPECULAR
             #pragma multi_compile _ _RIM_SPECULAR_SWITCH
             #pragma multi_compile _ _UV_LINES
             #pragma multi_compile _ _TEX_LINES
@@ -102,11 +106,8 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _MAT_OVERRIDE
 
             #pragma vertex vert_toonShading
-            #ifdef _MAT_OVERRIDE
-                #pragma fragment frag_monochromeShading
-            #else 
-                #pragma fragment frag_toonShading
-            #endif
+            
+            #pragma fragment frag_toonShading
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -115,9 +116,12 @@ Shader "Krus/ToonShading"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/SpaceTransforms.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
 
+            #include "K_ToonLighting.hlsl"
+
             #include "K_TriplanarProjection.hlsl"
             #include "K_ToonShadingPass.hlsl"
             #include "K_MonochromeShading.hlsl"
+
 
             ENDHLSL
         }
@@ -142,6 +146,7 @@ Shader "Krus/ToonShading"
 
             ENDHLSL
         }
+
 
         /*
         Pass
