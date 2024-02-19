@@ -616,6 +616,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9336ab63be00f3745beb29b159676ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadowPatternFactor: 0.7
+  shadowPatternScale: 0.4
   shadowCurve:
     serializedVersion: 2
     m_Curve:
@@ -629,8 +631,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.54839027
-      value: 0.32975
+      time: 0.49860576
+      value: 0.3328933
       inSlope: Infinity
       outSlope: Infinity
       tangentMode: 103
@@ -710,13 +712,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 832575517}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.11731275, y: -0.13232511, z: 0.07519751, w: 0.9813629}
   m_LocalPosition: {x: -3.6750624, y: -1.9056315, z: 0.41535288}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2027976529}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 14.487, y: -14.479, z: 6.914}
 --- !u!1 &1126834117
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,6 +958,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9336ab63be00f3745beb29b159676ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadowPatternFactor: 1
+  shadowPatternScale: 1
   shadowCurve:
     serializedVersion: 2
     m_Curve:
