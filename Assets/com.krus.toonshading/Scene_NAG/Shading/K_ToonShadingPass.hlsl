@@ -30,6 +30,8 @@
 
     float4 _BaseTex_ST;
 
+    float _ShadowPatternFactor;
+    float _ShadowPatternScale;
     half _ShadowThreshold;
     half _ShadowSmoothness;
     half3 _BrightCol;
@@ -94,8 +96,6 @@
         half NoH = saturate(dot(IN.normalWS, H));
         half NoV = dot(IN.normalWS, V);
 
-
-
         // TEXTURES // 
         // _IlmTex: r - specular layer; g - shadow offset; b - specular mask; a - outline
         half3 baseCol = SAMPLE_TEXTURE2D(_BaseTex, sampler_BaseTex, IN.uv01.xy).rgb;
@@ -120,9 +120,11 @@
         rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
         rcDiffuse.vId = _Id_ShadowCurve;
 
-        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3).r;
+        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
+        shadowPattern = step(shadowPattern * _ShadowPatternFactor, NoL01);
 
-        half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse, shadowPattern);
+        half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
+        diffuse *= shadowPattern;
 
         // DIRECT LIGHT SPECULAR //
         #ifdef _DIRECT_LIGHT_SPECULAR

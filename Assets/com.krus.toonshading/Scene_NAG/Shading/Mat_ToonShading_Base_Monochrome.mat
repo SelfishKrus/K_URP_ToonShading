@@ -156,7 +156,7 @@ Material:
     - _RimSpecularThreshold: 0.35
     - _RimSpecularWidth: 1
     - _ShadowSmoothness: 0
-    - _ShadowThreshold: 0.454
+    - _ShadowThreshold: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

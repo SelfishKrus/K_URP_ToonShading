@@ -9,6 +9,8 @@ public class RemapCurve_Character : RemapCurve
 {   
     Texture2D characterCurveTexture;
 
+    public float shadowPatternFactor = 1.0f;
+    public float shadowPatternScale = 1.0f;
     int numCurve;
     int id_shadowCurve;
 
@@ -59,6 +61,8 @@ public class RemapCurve_Character : RemapCurve
     {
         Shader.SetGlobalTexture("_CurveTexture", characterCurveTexture);
         Shader.SetGlobalInt("_Id_ShadowCurve", id_shadowCurve);
+        Shader.SetGlobalFloat("_ShadowPatternFactor", shadowPatternFactor);
+        Shader.SetGlobalFloat("_ShadowPatternScale", shadowPatternScale);
     }
 
 

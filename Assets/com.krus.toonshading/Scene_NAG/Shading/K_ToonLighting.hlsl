@@ -18,7 +18,8 @@
 
     float3 GetIncidentLight_DL(ToonBrdf brdf, Light mainLight, RemapCurve curve)
     {
-        float lightIntensity = dot(brdf.normal, mainLight.direction) * 0.5 + 0.5;
+        float NoL01 = dot(brdf.normal, mainLight.direction) * 0.5 + 0.5;
+        float lightIntensity = NoL01;
         #ifdef _RECEIVE_SHADOWS
             lightIntensity *= mainLight.shadowAttenuation;
         #endif
@@ -30,7 +31,7 @@
         return mainLight.color * lightIntensity;
     }
 
-    float3 GetDiffuse_DL(ToonBrdf brdf, Light mainLight, RemapCurve curve, float shadowPattern)
+    float3 GetDiffuse_DL(ToonBrdf brdf, Light mainLight, RemapCurve curve)
     {   
         float3 incidentLight = GetIncidentLight_DL(brdf, mainLight, curve);
         return lerp(brdf.sssColor, brdf.baseColor, incidentLight);
