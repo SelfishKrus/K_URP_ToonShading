@@ -7,7 +7,6 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class RemapCurve_Character : RemapCurve
 {   
-    public Material material;
     Texture2D characterCurveTexture;
 
     int numCurve;
@@ -34,12 +33,6 @@ public class RemapCurve_Character : RemapCurve
     {   
         Setup();
 
-        if (material == null)
-        {
-            Debug.Log("Material not found");
-            return;
-        }
-
         CreateCurveTexture(characterCurveTexture, numCurve);
         UpdateCurveTexture(characterCurveTexture, shadowCurve, id_shadowCurve);
         PassData();
@@ -52,11 +45,6 @@ public class RemapCurve_Character : RemapCurve
     // Write curve to texture
     void Setup()
     {
-        if (GetComponent<Renderer>() != null)
-        {
-            material = GetComponent<Renderer>().sharedMaterial ;
-        }
-
         List<AnimationCurve> curves = new List<AnimationCurve>();
         curves.Add(shadowCurve);
 
@@ -69,8 +57,8 @@ public class RemapCurve_Character : RemapCurve
 
     void PassData()
     {
-        material.SetTexture("_CurveTexture", characterCurveTexture);
-        material.SetInt("_Id_ShadowCurve", id_shadowCurve);
+        Shader.SetGlobalTexture("_CurveTexture", characterCurveTexture);
+        Shader.SetGlobalInt("_Id_ShadowCurve", id_shadowCurve);
     }
 
 
