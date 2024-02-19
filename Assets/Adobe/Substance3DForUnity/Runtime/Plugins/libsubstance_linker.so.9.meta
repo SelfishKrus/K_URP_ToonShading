@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e66b78ce424b7784c824d51cad48a26f
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Plugins/libsubstance_linker.so.9
+  uploadId: 640086

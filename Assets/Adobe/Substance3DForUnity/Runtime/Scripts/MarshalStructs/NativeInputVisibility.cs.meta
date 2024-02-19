@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 074a7ebe4a960264d9ade0ce2e8404b6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Scripts/MarshalStructs/NativeInputVisibility.cs
+  uploadId: 640086

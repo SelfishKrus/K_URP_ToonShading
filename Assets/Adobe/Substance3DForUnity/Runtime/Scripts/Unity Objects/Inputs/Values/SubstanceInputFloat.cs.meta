@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 6a2b5e2d6e8627946aee84ca2cad43a2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Scripts/Unity Objects/Inputs/Values/SubstanceInputFloat.cs
+  uploadId: 640086

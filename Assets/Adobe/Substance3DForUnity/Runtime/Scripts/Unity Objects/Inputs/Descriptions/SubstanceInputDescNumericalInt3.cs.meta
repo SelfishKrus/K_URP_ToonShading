@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 36e74c56f6c8da5478de4fa824d907ac
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Scripts/Unity Objects/Inputs/Descriptions/SubstanceInputDescNumericalInt3.cs
+  uploadId: 640086

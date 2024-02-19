@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 1601ac9007c2d7a40a34b1bb071fd814
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Scripts/Unity Objects/Inputs/Values/SubstanceInputInt.cs
+  uploadId: 640086

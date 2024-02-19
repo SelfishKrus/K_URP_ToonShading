@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 19b7748e2fed01745849ab203806a4da
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Scripts/Unity Objects/Enums/ShuffleIndex.cs
+  uploadId: 640086

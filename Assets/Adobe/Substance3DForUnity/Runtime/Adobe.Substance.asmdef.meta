@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0322a29457affe94ab4ade0a1555000f
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Adobe.Substance.asmdef
+  uploadId: 640086

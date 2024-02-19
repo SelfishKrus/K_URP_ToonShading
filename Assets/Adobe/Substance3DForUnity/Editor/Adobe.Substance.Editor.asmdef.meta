@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: b5520fe70c6e8e046b4383b7dd2c75c8
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Editor/Adobe.Substance.Editor.asmdef
+  uploadId: 640086

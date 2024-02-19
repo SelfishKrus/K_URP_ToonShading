@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 7b566521bda0b2c47a8cc502717e65b4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Runtime/Scripts/MarshalStructs/Enums/ErrorCode.cs
+  uploadId: 640086

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 83f5cf3931946de4da5f6a2138701f02
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 213208
+  packageName: Substance 3D for Unity
+  packageVersion: 3.10.1
+  assetPath: Assets/Adobe/Substance3DForUnity/Editor/Scripts/SubstanceEditorEngine.cs
+  uploadId: 640086
