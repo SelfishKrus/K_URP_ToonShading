@@ -9,14 +9,19 @@ public class RemapCurve_Character : RemapCurve
 {   
     Texture2D characterCurveTexture;
 
-    public float shadowPatternFactor = 1.0f;
-    public float shadowPatternScale = 1.0f;
+    public float shadowPatternFactor = 0.7f;
+    public float shadowPatternScale = 0.4f;
     int numCurve;
     int id_shadowCurve;
 
     public AnimationCurve shadowCurve;
 
     public RenderTexture renderTexture;
+
+    void Start()
+    {
+        OnValidate();
+    }
 
     void Update()
     {

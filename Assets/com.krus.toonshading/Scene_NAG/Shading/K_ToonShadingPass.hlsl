@@ -114,17 +114,17 @@
         brdf.ao = IN.color.r;
         brdf.normal = IN.normalWS;
 
+        // SHADOW PATTERN // 
+        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
+        shadowPattern = step(shadowPattern * _ShadowPatternFactor, NoL01);
+
         // DIFFUSE // 
         RemapCurve rcDiffuse;
         rcDiffuse.curveTexture = _CurveTexture;
         rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
         rcDiffuse.vId = _Id_ShadowCurve;
 
-        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
-        shadowPattern = step(shadowPattern * _ShadowPatternFactor, NoL01);
-
         half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
-        diffuse *= shadowPattern;
 
         // DIRECT LIGHT SPECULAR //
         #ifdef _DIRECT_LIGHT_SPECULAR
