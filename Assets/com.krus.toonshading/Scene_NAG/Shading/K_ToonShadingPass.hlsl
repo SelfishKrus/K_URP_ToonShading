@@ -87,7 +87,7 @@
 
     half4 frag_toonShading (v2f IN) : SV_Target
     {   
-        // ARGS // 
+        // PRE // 
         Light mainLight = GetMainLight(IN.shadowCoord);
         float3 V = normalize(_WorldSpaceCameraPos - IN.posWS);
         float3 H = normalize(V + mainLight.direction);
@@ -113,10 +113,6 @@
         brdf.sssColor = sssCol;
         brdf.ao = IN.color.r;
         brdf.normal = IN.normalWS;
-
-        // SHADOW PATTERN // 
-        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
-        shadowPattern = step(shadowPattern * _ShadowPatternFactor, NoL01);
 
         // DIFFUSE // 
         RemapCurve rcDiffuse;
@@ -164,8 +160,11 @@
             half3 rimSpecular = 0;
         #endif 
 
+        // SHADOW PATTERN // 
+        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
+        shadowPattern = step(shadowPattern * _ShadowPatternFactor, NoL01);
         
-        // Outline //
+        // OUTLINE //
         // sketch 
         half outline = 1;
         #ifdef _TEX_LINES
@@ -175,7 +174,7 @@
             outline *= ilmTex.a;
         #endif
 
-        // Final Color
+        // FINAL COLOR // 
         half3 col;
         col = diffuse + specular + rimSpecular;
         col *= outline;
