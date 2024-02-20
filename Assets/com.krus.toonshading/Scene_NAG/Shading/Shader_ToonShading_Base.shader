@@ -19,12 +19,14 @@ Shader "Krus/ToonShading"
         _IlmTex ("Ilm Map", 2D) = "blue" {}
         _SSSTex ("SSS Map", 2D) = "black" {}
         _DetailTex ("Detail Map", 2D) = "white" {}
+        [Space(10)]
 
         [Header(Diffuse)]
         _BrightCol ("Bright Color", Color) = (1, 1, 1, 1)
         _DarkCol ("Dark Color", Color) = (1, 1, 1, 1)
         _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.5
         _ShadowSmoothness ("Shadow Smoothness", Range(0, 1)) = 0.0
+        [Space(10)]
 
         [Header(Direct Light Specular)]
         [Toggle(_DIRECT_LIGHT_SPECULAR)]_DirectLightSpecular ("Direct Light Specular", float) = 1
@@ -32,6 +34,7 @@ Shader "Krus/ToonShading"
         _SpecularThreshold ("Specular Threshold", float) = 0.35
         _SpecularSmoothness ("Specular Smoothness", float) = 0.0
         _SpecularCol ("Specular Color", Color) = (1, 1, 1, 1)
+        [Space(10)]
 
         [Header(Rim Specular)]
         [Toggle(_RIM_SPECULAR)]_RimSpecular ("Rim Specular", float) = 1
@@ -45,8 +48,13 @@ Shader "Krus/ToonShading"
         [Header(Shadow)]
         [Toggle(_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
         _ShadowPatternTex ("Shadow Pattern Texture", 2D) = "" {}
-        
         [Space(10)]
+
+        [Header(Emissive)]
+        _EmissiveTex ("Emissive Texture", 2D) = "black" {}
+        [HDR]_EmissiveCol ("Emissive Color", Color) = (1, 1, 1, 1)
+        [Space(10)]
+        
         _Test ("Test", Vector) = (0,0,0,0)
 
     }

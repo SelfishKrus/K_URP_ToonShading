@@ -47,6 +47,8 @@
     half _RimSpecularSmoothness;
     half3 _RimSpecularCol;
 
+    float3 _EmissiveCol;
+
     float4 _Test;
     CBUFFER_END
 
@@ -59,6 +61,7 @@
     TEXTURE2D(_IlmTex);             SAMPLER(sampler_IlmTex);
     TEXTURE2D(_SSSTex);             SAMPLER(sampler_SSSTex);
     TEXTURE2D(_DetailTex);          SAMPLER(sampler_DetailTex);
+    TEXTURE2D(_EmissiveTex);        SAMPLER(sampler_EmissiveTex);
 
     TEXTURE2D(_ShadowPatternTex);   SAMPLER(sampler_ShadowPatternTex);
 
@@ -114,6 +117,20 @@
         brdf.ao = IN.color.r;
         brdf.normal = IN.normalWS;
 
+        // OUTLINE //
+        // sketch 
+        half innerLines = 1;
+        #ifdef _TEX_LINES
+            innerLines *= detailTex;
+        #endif
+        #ifdef _UV_LINES
+            innerLines *= ilmTex.a;
+        #endif
+
+        // SHADOW PATTERN // 
+        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
+        float shadowPattern_diff = step(shadowPattern * _ShadowPatternFactor, NoL01);
+
         // DIFFUSE // 
         RemapCurve rcDiffuse;
         rcDiffuse.curveTexture = _CurveTexture;
@@ -121,6 +138,7 @@
         rcDiffuse.vId = _Id_ShadowCurve;
 
         half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
+        diffuse *= shadowPattern_diff;
 
         // DIRECT LIGHT SPECULAR //
         #ifdef _DIRECT_LIGHT_SPECULAR
@@ -158,26 +176,15 @@
             #endif
         #else
             half3 rimSpecular = 0;
-        #endif 
-
-        // SHADOW PATTERN // 
-        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
-        shadowPattern = step(shadowPattern * _ShadowPatternFactor, NoL01);
-        
-        // OUTLINE //
-        // sketch 
-        half outline = 1;
-        #ifdef _TEX_LINES
-            outline *= detailTex;
         #endif
-        #ifdef _UV_LINES
-            outline *= ilmTex.a;
-        #endif
+        // EMISSIVE //
+        float3 emissive = SAMPLE_TEXTURE2D(_EmissiveTex, sampler_EmissiveTex, IN.uv01.xy).rgb;
+        emissive *= _EmissiveCol;
 
         // FINAL COLOR // 
         half3 col;
-        col = diffuse + specular + rimSpecular;
-        col *= outline;
+        col = diffuse + (specular + rimSpecular + emissive) * 1.5;
+        col *= innerLines;
 
         #ifdef _UV2_CHECK
             col = float3(IN.uv2, 1);
