@@ -20,18 +20,15 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_ToonShading_Decal
+  m_Name: Mat_ToonShading_Weapon_Silhouette
   m_Shader: {fileID: 4800000, guid: 8786408a8b12dc04c80ec4ff6e209170, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _DIFFUSE
-  - _DIRECT_LIGHT_SPECULAR
+  - _MAT_OVERRIDE
   - _NDC_OUTLINE
   - _RECEIVE_SHADOWS
-  - _RIM_SPECULAR
-  - _TEX_LINES
-  - _UV_LINES
+  - _RIM_SPECULAR_SWITCH
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -44,11 +41,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: c60abc8e056c4b446b6b3ea40bf0321b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8a360236f3602e0419986606dc0ef69d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseTex:
-        m_Texture: {fileID: 2800000, guid: c60abc8e056c4b446b6b3ea40bf0321b, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -68,7 +65,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: ed876425d4d419044bb3f6316c98ca39, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -80,7 +77,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IlmTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: f8e71bd156de1184092039baaa79a702, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -104,7 +101,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowPatternTex:
-        m_Texture: {fileID: 2800000, guid: 8302ed87d226d7641a69a2927cef9db4, type: 3}
+        m_Texture: {fileID: 2800000, guid: a65f175e70aec2e4d83cf81629af3986, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -135,42 +132,44 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
+    - _DetailLinesOn: 0
     - _DetailNormalMapScale: 1
-    - _Diffuse: 1
-    - _DirectLightSpecular: 1
+    - _Diffuse: 0
+    - _DirectLightSpecular: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
-    - _Glossiness: 0
+    - _Glossiness: 1.07
     - _GlossyReflections: 0
-    - _MAT_OVERRIDE: 0
+    - _MAT_OVERRIDE: 1
     - _Metallic: 0
     - _NdcOutline: 1
-    - _NormalSmoothness: 0
+    - _NormalSmoothness: 0.5
     - _OcclusionStrength: 1
     - _OutlineOffset: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimSpecular: 1
-    - _RimSpecularDetail: 0.35
-    - _RimSpecularSmoothness: 0.05
-    - _RimSpecularSwitch: 0
-    - _RimSpecularWidth: 0.65
+    - _RimSpecular: 0
+    - _RimSpecularDetail: 0.05
+    - _RimSpecularSmoothness: 0.01
+    - _RimSpecularSwitch: 1
+    - _RimSpecularThreshold: 0.35
+    - _RimSpecularWidth: 2.81
     - _ShadowSmoothness: 0
-    - _ShadowThreshold: 0
+    - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSmoothness: 0.01
-    - _SpecularThreshold: 0.5
+    - _SpecularSmoothness: 0
+    - _SpecularThreshold: 0.12
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TexLines: 1
+    - _TexLines: 0
     - _UV2_CHECK: 0
-    - _UVLines: 1
+    - _UVLines: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
@@ -179,11 +178,13 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkCol: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissiveCol: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveCol: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimSpecularCol: {r: 1, g: 1, b: 1, a: 1}
+    - _RimSpecularCol_Bright: {r: 1, g: 1, b: 1, a: 1}
+    - _RimSpecularCol_Dark: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularCol: {r: 1, g: 1, b: 1, a: 1}
-    - _Test: {r: 1, g: 0, b: 0, a: 0}
+    - _Test: {r: 2.5, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

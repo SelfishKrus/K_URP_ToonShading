@@ -25,6 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _DIFFUSE
   - _DIRECT_LIGHT_SPECULAR
   - _NDC_OUTLINE
   - _RECEIVE_SHADOWS
@@ -140,6 +141,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailLinesOn: 1
     - _DetailNormalMapScale: 1
+    - _Diffuse: 1
     - _DirectLightSpecular: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
@@ -184,7 +186,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkCol: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissiveCol: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveCol: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimSpecularCol: {r: 0.99999994, g: 0.99999994, b: 0.99999994, a: 1}
     - _RimSpecularCol_Bright: {r: 1, g: 1, b: 0.5431267, a: 1}

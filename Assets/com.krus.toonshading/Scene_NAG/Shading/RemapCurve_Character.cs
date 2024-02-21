@@ -15,12 +15,12 @@ public class RemapCurve_Character : RemapCurve
     int id_shadowCurve;
 
     public AnimationCurve shadowCurve;
-
     public RenderTexture renderTexture;
 
     void Start()
     {
         OnValidate();
+
     }
 
     void Update()
@@ -30,22 +30,27 @@ public class RemapCurve_Character : RemapCurve
             OnValidate();
         }
     }
-
-    public void ForceValidate()
-    {
-        OnValidate();
-    }
-
     void OnValidate ()
     {   
         Setup();
 
         CreateCurveTexture(characterCurveTexture, numCurve);
         UpdateCurveTexture(characterCurveTexture, shadowCurve, id_shadowCurve);
-        PassData();
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            PassData(renderer.sharedMaterial);
+        }
+
         #if UNITY_EDITOR
             Graphics.Blit(characterCurveTexture, renderTexture);
         #endif
+    }
+
+    public void ForceValidate()
+    {
+        OnValidate();
     }
 
 #region PRIVATE_METHODS
@@ -62,12 +67,12 @@ public class RemapCurve_Character : RemapCurve
         characterCurveTexture = new Texture2D(256, numCurve, TextureFormat.RFloat, false);
     }
 
-    void PassData()
+    void PassData(Material material)
     {
-        Shader.SetGlobalTexture("_CurveTexture", characterCurveTexture);
-        Shader.SetGlobalInt("_Id_ShadowCurve", id_shadowCurve);
-        Shader.SetGlobalFloat("_ShadowPatternFactor", shadowPatternFactor);
-        Shader.SetGlobalFloat("_ShadowPatternScale", shadowPatternScale);
+        material.SetTexture("_CurveTexture", characterCurveTexture);
+        material.SetInt("_Id_ShadowCurve", id_shadowCurve);
+        material.SetFloat("_ShadowPatternFactor", shadowPatternFactor);
+        material.SetFloat("_ShadowPatternScale", shadowPatternScale);
     }
 
 

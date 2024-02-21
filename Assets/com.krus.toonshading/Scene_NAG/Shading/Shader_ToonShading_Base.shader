@@ -16,14 +16,15 @@ Shader "Krus/ToonShading"
 
         [Header(Toon Shading)]
         _BaseTex ("Base Color Map", 2D) = "white" {}
-        _IlmTex ("Ilm Map", 2D) = "blue" {}
+        _IlmTex ("Ilm Map", 2D) = "white" {}
         _SSSTex ("SSS Map", 2D) = "black" {}
         _DetailTex ("Detail Map", 2D) = "white" {}
         [Space(10)]
 
         [Header(Diffuse)]
+        [Toggle(_DIFFUSE)]_Diffuse ("Diffuse", float) = 1
         _BrightCol ("Bright Color", Color) = (1, 1, 1, 1)
-        _DarkCol ("Dark Color", Color) = (1, 1, 1, 1)
+        _DarkCol ("Dark Color", Color) = (0, 0, 0, 1)
         _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.5
         _ShadowSmoothness ("Shadow Smoothness", Range(0, 1)) = 0.0
         [Space(10)]
@@ -47,12 +48,12 @@ Shader "Krus/ToonShading"
         
         [Header(Shadow)]
         [Toggle(_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
-        _ShadowPatternTex ("Shadow Pattern Texture", 2D) = "" {}
+        _ShadowPatternTex ("Shadow Pattern Texture", 2D) = "white" {}
         [Space(10)]
 
         [Header(Emissive)]
-        _EmissiveTex ("Emissive Texture", 2D) = "black" {}
-        [HDR]_EmissiveCol ("Emissive Color", Color) = (1, 1, 1, 1)
+        _EmissiveTex ("Emissive Texture", 2D) = "white" {}
+        [HDR]_EmissiveCol ("Emissive Color", Color) = (0, 0, 0, 1)
         [Space(10)]
         
         _Test ("Test", Vector) = (0,0,0,0)
@@ -105,6 +106,7 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
+            #pragma multi_compile _ _DIFFUSE
             #pragma multi_compile _ _DIRECT_LIGHT_SPECULAR
             #pragma multi_compile _ _RIM_SPECULAR
             #pragma multi_compile _ _RIM_SPECULAR_SWITCH
@@ -154,8 +156,6 @@ Shader "Krus/ToonShading"
             ENDHLSL
         }
 
-
-        /*
         Pass
         {
             Name "ShadowCaster"
@@ -198,7 +198,6 @@ Shader "Krus/ToonShading"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
             ENDHLSL
         }
-        */
 
         Pass
         {

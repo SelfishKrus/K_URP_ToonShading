@@ -132,12 +132,17 @@
         float shadowPattern_diff = step(shadowPattern * _ShadowPatternFactor, NoL01);
 
         // DIFFUSE // 
-        RemapCurve rcDiffuse;
-        rcDiffuse.curveTexture = _CurveTexture;
-        rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
-        rcDiffuse.vId = _Id_ShadowCurve;
+        #ifdef _DIFFUSE
+            RemapCurve rcDiffuse;
+            rcDiffuse.curveTexture = _CurveTexture;
+            rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
+            rcDiffuse.vId = _Id_ShadowCurve;
 
-        half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
+            half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
+        #else
+            half3 diffuse = 0;
+        #endif
+
         diffuse *= shadowPattern_diff;
 
         // DIRECT LIGHT SPECULAR //
@@ -181,9 +186,11 @@
         float3 emissive = SAMPLE_TEXTURE2D(_EmissiveTex, sampler_EmissiveTex, IN.uv01.xy).rgb;
         emissive *= _EmissiveCol;
 
+        // SHADOWS //
+
         // FINAL COLOR // 
         half3 col;
-        col = diffuse + (specular + rimSpecular + emissive) * 1.5;
+        col = diffuse + specular + rimSpecular + emissive;
         col *= innerLines;
 
         #ifdef _UV2_CHECK
