@@ -71,7 +71,7 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
     {
         // if (renderingData.cameraData.camera.cameraType != CameraType.Game && renderingData.cameraData.camera.cameraType != CameraType.SceneView)
         // {
-            m_RenderPass.SetTarget(renderer.cameraColorTargetHandle);
+            // m_RenderPass.SetTarget(renderer.cameraColorTargetHandle);
         // }
     }
 
@@ -131,12 +131,18 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {   
             var colorDesc = renderingData.cameraData.cameraTargetDescriptor;
+            colorDesc.colorFormat = RenderTextureFormat.ARGB32;
             colorDesc.depthBufferBits = 0;
+
+            var renderer = renderingData.cameraData.renderer;
+            // set target
+            m_cameraColorTarget = renderer.cameraColorTargetHandle;
 
             // Set up temporary color buffer (for blit)
 
             RenderingUtils.ReAllocateIfNeeded(ref rtCustomColor, colorDesc, name: "_RTCustomColor");
             RenderingUtils.ReAllocateIfNeeded(ref rtTempColor, colorDesc, name: "_RTTempColor");
+
 
             ConfigureTarget(m_cameraColorTarget);
             ConfigureTarget(rtCustomColor);
@@ -146,14 +152,18 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cameraData = renderingData.cameraData;
+            
 
             if (m_material == null)
+                return;
+
+            if (m_cameraColorTarget.rt == null)
                 return;
 
             CommandBuffer cmd = CommandBufferPool.Get();
             using (UnityEngine.Rendering.ProfilingScope profilingScope = new UnityEngine.Rendering.ProfilingScope(cmd, m_profilingSampler))
             {
-                PassShaderData(m_material);
+                // PassShaderData(m_material);
                 m_material.SetTexture(m_settings.colorTargetDestinationID, m_cameraColorTarget);
 
                 RTHandle rtCamera = renderingData.cameraData.renderer.cameraColorTargetHandle;
