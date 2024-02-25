@@ -48,6 +48,7 @@ Shader "Krus/ToonShading"
         
         [Header(Shadow)]
         [Toggle(_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
+        [Toggle(_RECEIVE_CUSTOM_SHADOWS)] _ReceiveCustomShadows ("Receive Custom Shadows", Float) = 1
         _ShadowPatternTex ("Shadow Pattern Texture", 2D) = "white" {}
         [Space(10)]
 
@@ -103,6 +104,7 @@ Shader "Krus/ToonShading"
 
             HLSLPROGRAM
             #pragma multi_compile _ _RECEIVE_SHADOWS
+            #pragma multi_compile _ _RECEIVE_CUSTOM_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
@@ -130,7 +132,7 @@ Shader "Krus/ToonShading"
 
             #include "K_TriplanarProjection.hlsl"
             #include "K_ToonShadingPass.hlsl"
-            #include "K_MonochromeShading.hlsl"
+            #include "K_CustomShadowMap.hlsl"
             
             ENDHLSL
         }
