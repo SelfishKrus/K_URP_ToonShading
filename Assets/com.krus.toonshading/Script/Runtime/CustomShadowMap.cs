@@ -60,7 +60,7 @@ public class CustomShadowMap : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        // Gizmos.DrawWireCube(bounds.center, bounds.size);
+        Gizmos.DrawWireCube(bounds.center, bounds.size);
     }
 
 #region PRIVATE_METHODS

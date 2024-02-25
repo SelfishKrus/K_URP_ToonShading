@@ -28,6 +28,7 @@ Material:
   - _DIFFUSE
   - _DIRECT_LIGHT_SPECULAR
   - _NDC_OUTLINE
+  - _RECEIVE_CUSTOM_SHADOWS
   - _RIM_SPECULAR
   - _RIM_SPECULAR_SWITCH
   - _TEX_LINES
@@ -156,6 +157,7 @@ Material:
     - _OutlineOffset: 0.35
     - _Parallax: 0.005
     - _QueueOffset: 0
+    - _ReceiveCustomShadows: 1
     - _ReceiveShadows: 0
     - _RimSpecular: 1
     - _RimSpecularDetail: 0.35
