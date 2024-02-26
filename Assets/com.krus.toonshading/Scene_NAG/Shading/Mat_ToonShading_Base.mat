@@ -28,9 +28,9 @@ Material:
   - _DIFFUSE
   - _DIRECT_LIGHT_SPECULAR
   - _NDC_OUTLINE
-  - _RECEIVE_CUSTOM_SHADOWS
   - _RIM_SPECULAR
   - _RIM_SPECULAR_SWITCH
+  - _SHADOW_CURVE_REMAP
   - _TEX_LINES
   - _UV_LINES
   m_InvalidKeywords:
@@ -157,7 +157,7 @@ Material:
     - _OutlineOffset: 0.35
     - _Parallax: 0.005
     - _QueueOffset: 0
-    - _ReceiveCustomShadows: 1
+    - _ReceiveCustomShadows: 0
     - _ReceiveShadows: 0
     - _RimSpecular: 1
     - _RimSpecularDetail: 0.35
@@ -165,8 +165,9 @@ Material:
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
     - _RimSpecularWidth: 1
+    - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
-    - _ShadowThreshold: 0.454
+    - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -187,7 +188,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkCol: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissiveCol: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissiveCol: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimSpecularCol: {r: 1, g: 0.9110512, b: 0.703504, a: 1}
     - _RimSpecularCol_Bright: {r: 1, g: 1, b: 0.5431267, a: 1}

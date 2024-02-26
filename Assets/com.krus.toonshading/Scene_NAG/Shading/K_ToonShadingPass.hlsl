@@ -32,8 +32,6 @@
 
     float _ShadowPatternFactor;
     float _ShadowPatternScale;
-    half _ShadowThreshold;
-    half _ShadowSmoothness;
     half3 _BrightCol;
     half3 _DarkCol;
 
@@ -116,6 +114,8 @@
         brdf.sssColor = sssCol;
         brdf.ao = IN.color.r;
         brdf.normal = IN.normalWS;
+        brdf.pos = IN.posWS;
+        brdf.posNDC = IN.pos;
 
         // OUTLINE //
         // sketch 
@@ -131,19 +131,30 @@
         float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
         float shadowPattern_diff = step(shadowPattern * _ShadowPatternFactor, NoL01);
 
+        #ifdef _RECEIVE_CUSTOM_SHADOW
+            float2 uv_screen_lightCam = GetLightCameraScreenUV(IN.posWS);
+            shadow *= SampleCustomShadowMap_PCF(uv_screen_lightCam, IN.pos, _LightCam_ShadowBias, _CustomShadowPcfStep);
+        #endif
+
         // DIFFUSE // 
         #ifdef _DIFFUSE
-            RemapCurve rcDiffuse;
-            rcDiffuse.curveTexture = _CurveTexture;
-            rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
-            rcDiffuse.vId = _Id_ShadowCurve;
+            #ifdef _SHADOW_CURVE_REMAP
+                RemapCurve rcDiffuse;
+                rcDiffuse.curveTexture = _CurveTexture;
+                rcDiffuse.sampler_curveTexture = sampler_CurveTexture;
+                rcDiffuse.vId = _Id_ShadowCurve;
 
-            half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
+                half3 diffuse = GetDiffuse_DL(brdf, mainLight, rcDiffuse);
+            #else 
+                half3 diffuse = GetDiffuse_DL(brdf, mainLight);
+            #endif 
         #else
             half3 diffuse = 0;
         #endif
 
-        diffuse *= shadowPattern_diff;
+        #ifdef _RECEIVE_SHADOWS
+            diffuse *= shadowPattern_diff;
+        #endif 
 
         // DIRECT LIGHT SPECULAR //
         #ifdef _DIRECT_LIGHT_SPECULAR

@@ -23,6 +23,7 @@ Shader "Krus/ToonShading"
 
         [Header(Diffuse)]
         [Toggle(_DIFFUSE)]_Diffuse ("Diffuse", float) = 1
+        [Toggle(_SHADOW_CURVE_REMAP)]_ShadowCurveRemap ("Shadow Curve Remap", float) = 0
         _BrightCol ("Bright Color", Color) = (1, 1, 1, 1)
         _DarkCol ("Dark Color", Color) = (0, 0, 0, 1)
         _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.5
@@ -48,7 +49,7 @@ Shader "Krus/ToonShading"
         
         [Header(Shadow)]
         [Toggle(_RECEIVE_SHADOWS)] _ReceiveShadows ("Receive Shadows", Float) = 1
-        [Toggle(_RECEIVE_CUSTOM_SHADOWS)] _ReceiveCustomShadows ("Receive Custom Shadows", Float) = 1
+        [Toggle(_RECEIVE_CUSTOM_SHADOWS)] _ReceiveCustomShadows ("Receive Custom Shadows", Float) = 0
         _ShadowPatternTex ("Shadow Pattern Texture", 2D) = "white" {}
         [Space(10)]
 
@@ -109,6 +110,7 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _DIFFUSE
+            #pragma multi_compile _ _SHADOW_CURVE_REMAP
             #pragma multi_compile _ _DIRECT_LIGHT_SPECULAR
             #pragma multi_compile _ _RIM_SPECULAR
             #pragma multi_compile _ _RIM_SPECULAR_SWITCH
@@ -131,8 +133,8 @@ Shader "Krus/ToonShading"
             #include "K_ToonLighting.hlsl"
 
             #include "K_TriplanarProjection.hlsl"
-            #include "K_ToonShadingPass.hlsl"
             #include "K_CustomShadowMap.hlsl"
+            #include "K_ToonShadingPass.hlsl"
             
             ENDHLSL
         }

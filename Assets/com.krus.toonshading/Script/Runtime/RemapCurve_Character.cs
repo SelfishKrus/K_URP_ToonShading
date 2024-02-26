@@ -75,6 +75,5 @@ public class RemapCurve_Character : RemapCurve
         material.SetFloat("_ShadowPatternScale", shadowPatternScale);
     }
 
-
 #endregion
 }

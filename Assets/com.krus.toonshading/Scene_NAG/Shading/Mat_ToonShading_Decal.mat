@@ -28,8 +28,10 @@ Material:
   - _DIFFUSE
   - _DIRECT_LIGHT_SPECULAR
   - _NDC_OUTLINE
+  - _RECEIVE_CUSTOM_SHADOWS
   - _RECEIVE_SHADOWS
   - _RIM_SPECULAR
+  - _SHADOW_CURVE_REMAP
   - _TEX_LINES
   - _UV_LINES
   m_InvalidKeywords: []
@@ -152,12 +154,14 @@ Material:
     - _OutlineOffset: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
+    - _ReceiveCustomShadows: 1
     - _ReceiveShadows: 1
     - _RimSpecular: 1
     - _RimSpecularDetail: 0.35
     - _RimSpecularSmoothness: 0.05
     - _RimSpecularSwitch: 0
     - _RimSpecularWidth: 0.65
+    - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0
     - _Smoothness: 0.5

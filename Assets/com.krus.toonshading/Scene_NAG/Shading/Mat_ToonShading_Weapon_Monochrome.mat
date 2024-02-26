@@ -29,10 +29,10 @@ Material:
   - _DIRECT_LIGHT_SPECULAR
   - _MAT_OVERRIDE
   - _NDC_OUTLINE
-  - _RECEIVE_CUSTOM_SHADOWS
   - _RECEIVE_SHADOWS
   - _RIM_SPECULAR
   - _RIM_SPECULAR_SWITCH
+  - _SHADOW_CURVE_REMAP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -154,7 +154,7 @@ Material:
     - _OutlineOffset: 0.35
     - _Parallax: 0.005
     - _QueueOffset: 0
-    - _ReceiveCustomShadows: 1
+    - _ReceiveCustomShadows: 0
     - _ReceiveShadows: 1
     - _RimSpecular: 1
     - _RimSpecularDetail: 0.15
@@ -162,6 +162,7 @@ Material:
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
     - _RimSpecularWidth: 0.85
+    - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
