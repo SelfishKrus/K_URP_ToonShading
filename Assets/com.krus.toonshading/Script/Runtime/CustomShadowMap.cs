@@ -43,18 +43,6 @@ public class CustomShadowMap : MonoBehaviour
 
     public float lightCamShadowBias = 0.0f;
 
-    public enum CameraType
-    {
-        _Orthographic = 1, 
-        _Perspective = 0
-    }
-    public CameraType _cameraType = CameraType._Orthographic;
-    public int cameraType
-    {
-        get { return (int)_cameraType; }
-        set { _cameraType = (CameraType)value; }
-    }
-
     void OnValidate()
     {
         InitializeRT();
@@ -81,7 +69,7 @@ public class CustomShadowMap : MonoBehaviour
     {
         // add camera compoent
         lightCam = gameObject.GetComponent<Camera>();
-        lightCam.orthographic = (_cameraType == CameraType._Orthographic); // Convert cameraType to boolean
+        lightCam.orthographic = true;
         lightCam.backgroundColor = Color.white;
         lightCam.clearFlags = CameraClearFlags.Color;
         lightCam.cullingMask = 1 << LayerMask.NameToLayer("Hero");
