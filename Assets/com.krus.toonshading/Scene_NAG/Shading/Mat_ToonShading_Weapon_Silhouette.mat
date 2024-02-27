@@ -35,7 +35,9 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - DepthOnly
+  - DepthNormals
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -150,6 +152,7 @@ Material:
     - _OutlineOffset: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
+    - _ReceiveCustomShadows: 0
     - _ReceiveShadows: 1
     - _RimSpecular: 0
     - _RimSpecularDetail: 0.05
@@ -157,6 +160,7 @@ Material:
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
     - _RimSpecularWidth: 2.81
+    - _ShadowCurveRemap: 0
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
@@ -171,7 +175,7 @@ Material:
     - _UV2_CHECK: 0
     - _UVLines: 0
     - _WorkflowMode: 1
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BrightCol: {r: 1, g: 1, b: 1, a: 1}
