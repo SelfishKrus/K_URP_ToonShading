@@ -176,7 +176,7 @@ public class CustomShadowMap : MonoBehaviour
         // Shadow map
         Shader.SetGlobalTexture("_LightCamDepthTex", lightCamDepthTex);
         Shader.SetGlobalFloat("_LightCam_ShadowBias", lightCamShadowBias);
-        Shader.SetGlobalFloat("_LightCamDepthTex_TexelSize", 1.0f / rtSize);
+        // Shader.SetGlobalFloat("_LightCamDepthTex_TexelSize", 1.0f / rtSize);
         Shader.SetGlobalInt("_CustomShadowPcfStep", PCF_Step);
     }
 
