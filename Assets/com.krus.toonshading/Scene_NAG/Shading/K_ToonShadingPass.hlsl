@@ -131,11 +131,6 @@
         float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
         float shadowPattern_diff = step(shadowPattern * _ShadowPatternFactor, NoL01);
 
-        #ifdef _RECEIVE_CUSTOM_SHADOW
-            float2 uv_screen_lightCam = GetLightCameraScreenUV(IN.posWS);
-            shadow *= SampleCustomShadowMap_PCF(uv_screen_lightCam, IN.pos, _LightCam_ShadowBias, _CustomShadowPcfStep);
-        #endif
-
         // DIFFUSE // 
         #ifdef _DIFFUSE
             #ifdef _SHADOW_CURVE_REMAP
@@ -197,7 +192,7 @@
         float3 emissive = SAMPLE_TEXTURE2D(_EmissiveTex, sampler_EmissiveTex, IN.uv01.xy).rgb;
         emissive *= _EmissiveCol;
 
-        // SHADOWS //
+        // SHADOWS // 
 
         // FINAL COLOR // 
         half3 col;

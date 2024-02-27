@@ -18,7 +18,8 @@ Material:
   - _RECEIVE_SHADOWS
   - _TEX_LINES
   - _UV_LINES
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _RECEIVE_CUSTOM_SHADOW
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -50,7 +51,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadowPatternTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: a65f175e70aec2e4d83cf81629af3986, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -62,6 +63,7 @@ Material:
     - _NdcOutline: 1
     - _NormalSmoothness: 0
     - _OutlineOffset: 0.01
+    - _RECEIVE_CUSTOM_SHADOW: 1
     - _ReceiveCustomShadows: 1
     - _ReceiveShadows: 1
     - _RimSpecular: 0
@@ -70,13 +72,14 @@ Material:
     - _RimSpecularSwitch: 0
     - _RimSpecularWidth: 0.65
     - _ShadowCurveRemap: 0
-    - _ShadowSmoothness: 0
+    - _ShadowSmoothness: 0.503
     - _ShadowThreshold: 0.5
     - _SpecularSmoothness: 0
     - _SpecularThreshold: 0.35
     - _TexLines: 1
     - _UV2_CHECK: 0
     - _UVLines: 1
+    - _ZWrite: 1
     m_Colors:
     - _BrightCol: {r: 1, g: 1, b: 1, a: 1}
     - _DarkCol: {r: 0, g: 0, b: 0, a: 1}

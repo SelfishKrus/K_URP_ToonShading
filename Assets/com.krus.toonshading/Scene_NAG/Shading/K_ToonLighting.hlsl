@@ -30,7 +30,7 @@
             shadow = mainLight.shadowAttenuation;
             #ifdef _RECEIVE_CUSTOM_SHADOWS
                 float2 uv_screen_lightCam = GetLightCameraScreenUV(brdf.pos);
-                shadow *= SampleCustomShadowMap_PCF(uv_screen_lightCam, brdf.posNDC);
+                shadow *= SampleCustomShadowMap_PCF(uv_screen_lightCam, brdf.posNDC, brdf.normal);
             #endif 
         #endif 
 

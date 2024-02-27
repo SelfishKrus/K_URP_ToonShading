@@ -168,7 +168,6 @@ Shader "Krus/ToonShading"
             ZWrite On
             ZTest LEqual
             ColorMask 0
-            Cull[_Cull]
 
             HLSLPROGRAM
             #pragma only_renderers gles gles3 glcore d3d11
@@ -243,7 +242,6 @@ Shader "Krus/ToonShading"
             Tags{"LightMode" = "DepthNormals"}
 
             ZWrite On
-            Cull[_Cull]
 
             HLSLPROGRAM
             #pragma only_renderers gles gles3 glcore d3d11

@@ -160,7 +160,6 @@ public class CustomShadowMap : MonoBehaviour
         lightCam.nearClipPlane = 0.01f;
         lightCam.farClipPlane = (zMaxMin.x - zMaxMin.y);
 
-
         lightCam.orthographicSize = (yMaxMin.x - yMaxMin.y) / 2;
         lightCam.aspect = (xMaxMin.x - xMaxMin.y) / (yMaxMin.x - yMaxMin.y); 
 
@@ -179,10 +178,11 @@ public class CustomShadowMap : MonoBehaviour
         // Shadow map
         Shader.SetGlobalTexture("_LightCamDepthTex", lightCamDepthTex);
         Shader.SetGlobalFloat("_LightCam_ShadowBias", lightCamShadowBias);
-        // Shader.SetGlobalFloat("_LightCamDepthTex_TexelSize", 1.0f / rtSize);
+        Shader.SetGlobalFloat("_LightCamDepthTex_TexelSize_Custom", 1.0f / rtSize);
         Shader.SetGlobalInt("_CustomShadowPcfStep", PCF_Step);
         Shader.SetGlobalInt("_LightCam_Pers_Or_Ortho", camType);
         Shader.SetGlobalFloat("_LightCam_FarClipPlane", lightCam.farClipPlane);
+        Shader.SetGlobalVector("_LightCam_Direction", -lightCam.transform.forward);
     }
 
 #endregion

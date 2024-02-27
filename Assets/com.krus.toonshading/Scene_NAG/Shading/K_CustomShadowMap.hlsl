@@ -5,10 +5,11 @@
     float4x4 _LightVP;
 
     int _CustomShadowPcfStep;
-    float _LightCamDepthTex_TexelSize;
+    float _LightCamDepthTex_TexelSize_Custom;
     float _LightCam_ShadowBias;
     int _LightCam_Pers_Or_Ortho;
     float _LightCam_FarClipPlane;
+    float3 _LightCam_Direction;
 
     float2 GetLightCameraScreenUV(float3 posWS)
     {
@@ -18,17 +19,23 @@
         return uv_screen_lightCam;
     }
 
-    float SampleCustomShadowMap_PCF(float2 uv_screen_lightCam, float4 posNDC)
-    {
+    float SampleCustomShadowMap_PCF(float2 uv_screen_lightCam, float4 posNDC, float3 normal)
+    {   
         float camDepth = posNDC.z;
+
         float shadow = 0.0f;
+        
         for (int i = 0; i < _CustomShadowPcfStep ; i++)
         {
             for (int j = 0; j < _CustomShadowPcfStep; j++)
             {
-                float2 uv = uv_screen_lightCam + float2(i, j) * _LightCamDepthTex_TexelSize;
+                float2 uv = uv_screen_lightCam + float2(i, j) * _LightCamDepthTex_TexelSize_Custom;
                 float lightDepth = SAMPLE_TEXTURE2D(_LightCamDepthTex, sampler_LightCamDepthTex, uv).r;
-                lightDepth = (_LightCam_Pers_Or_Ortho == 0) ? lightDepth * _LightCam_FarClipPlane*5 : lightDepth;
+                // why *= _ProjectionParams.z (current camera far plane) ?
+                // because NDC.z = HCS.z / HCS.w
+                // HCS.w - [near, far] in perspective camera 
+                // HCS.w = 1 in orthographic camera
+                lightDepth = (_LightCam_Pers_Or_Ortho == 0) ? lightDepth * _ProjectionParams.z : lightDepth;
                 #if UNITY_REVERSED_Z
                     shadow += camDepth + _LightCam_ShadowBias < lightDepth ? 0.0f : 1.0f;
                 #else
@@ -38,6 +45,10 @@
         }
 
         shadow /= _CustomShadowPcfStep * _CustomShadowPcfStep;
+
+        // Cull shadow if backface
+        bool isFront = (dot(normal, _LightCam_Direction) > 0.0f);
+        shadow = isFront ? shadow : 1.0f;
 
         return shadow;
     }
