@@ -11,7 +11,18 @@ public class CustomShadowMap : MonoBehaviour
     public int PCF_Step = 4;
 
     Camera lightCam;
-    Vector4 zBufferParamas;
+    
+    public enum CamType
+    {
+        _Perspective = 0,
+        _Orthographic = 1
+    }
+    public CamType _camType = CamType._Orthographic;
+    public int camType
+    {
+        get { return (int)_camType; }
+        set { _camType = (CamType)value; }
+    }
 
     // hide in inspector
     [HideInInspector]
@@ -69,7 +80,7 @@ public class CustomShadowMap : MonoBehaviour
     {
         // add camera compoent
         lightCam = gameObject.GetComponent<Camera>();
-        lightCam.orthographic = true;
+        lightCam.orthographic = (camType == 1) ? true : false;
         lightCam.backgroundColor = Color.white;
         lightCam.clearFlags = CameraClearFlags.Color;
         lightCam.cullingMask = 1 << LayerMask.NameToLayer("Hero");
@@ -147,22 +158,14 @@ public class CustomShadowMap : MonoBehaviour
         }
 
         lightCam.nearClipPlane = 0.01f;
-        lightCam.farClipPlane = zMaxMin.x - zMaxMin.y;
+        lightCam.farClipPlane = (zMaxMin.x - zMaxMin.y);
+
 
         lightCam.orthographicSize = (yMaxMin.x - yMaxMin.y) / 2;
-        lightCam.aspect = (xMaxMin.x - xMaxMin.y) / (yMaxMin.x - yMaxMin.y);
+        lightCam.aspect = (xMaxMin.x - xMaxMin.y) / (yMaxMin.x - yMaxMin.y); 
 
         // focus
         lightCam.transform.LookAt(bounds.center);
-
-        // z buffer params
-        // zBufferParam = { (f-n)/n, 1, (f-n)/n*f, 1/f }
-        float n = lightCam.nearClipPlane;
-        float f = lightCam.farClipPlane;
-        zBufferParamas.x = (f - n) / n;
-        zBufferParamas.y = 1;
-        zBufferParamas.z = (f - n) / n * f;
-        zBufferParamas.w = 1 / f;
     }
 
     void UpdateShaderParams()
@@ -178,6 +181,8 @@ public class CustomShadowMap : MonoBehaviour
         Shader.SetGlobalFloat("_LightCam_ShadowBias", lightCamShadowBias);
         // Shader.SetGlobalFloat("_LightCamDepthTex_TexelSize", 1.0f / rtSize);
         Shader.SetGlobalInt("_CustomShadowPcfStep", PCF_Step);
+        Shader.SetGlobalInt("_LightCam_Pers_Or_Ortho", camType);
+        Shader.SetGlobalFloat("_LightCam_FarClipPlane", lightCam.farClipPlane);
     }
 
 #endregion

@@ -7,6 +7,8 @@
     int _CustomShadowPcfStep;
     float _LightCamDepthTex_TexelSize;
     float _LightCam_ShadowBias;
+    int _LightCam_Pers_Or_Ortho;
+    float _LightCam_FarClipPlane;
 
     float2 GetLightCameraScreenUV(float3 posWS)
     {
@@ -24,8 +26,9 @@
         {
             for (int j = 0; j < _CustomShadowPcfStep; j++)
             {
-                float2 uv = uv_screen_lightCam + float2(i,j) * _LightCamDepthTex_TexelSize;
+                float2 uv = uv_screen_lightCam + float2(i, j) * _LightCamDepthTex_TexelSize;
                 float lightDepth = SAMPLE_TEXTURE2D(_LightCamDepthTex, sampler_LightCamDepthTex, uv).r;
+                lightDepth = (_LightCam_Pers_Or_Ortho == 0) ? lightDepth * _LightCam_FarClipPlane*5 : lightDepth;
                 #if UNITY_REVERSED_Z
                     shadow += camDepth + _LightCam_ShadowBias < lightDepth ? 0.0f : 1.0f;
                 #else

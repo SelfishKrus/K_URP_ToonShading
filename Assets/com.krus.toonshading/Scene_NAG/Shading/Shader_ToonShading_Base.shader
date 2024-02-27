@@ -141,7 +141,7 @@ Shader "Krus/ToonShading"
 
         Pass
         {   
-            Name "OutlinePass"
+            Name "Outline"
             Tags {"Queue"="Geometry+10"}
             ZWrite On
             Cull Front
