@@ -59,6 +59,7 @@ Shader "Krus/ToonShading"
         [Space(10)]
         
         _Test ("Test", Vector) = (0,0,0,0)
+        [Toggle(_REVERT_COLOR)] _RevertColor ("Revert Color", float) = 0
 
     }
 
@@ -118,6 +119,8 @@ Shader "Krus/ToonShading"
             #pragma multi_compile _ _TEX_LINES
             #pragma multi_compile _ _UV2_CHECK
             #pragma multi_compile _ _MAT_OVERRIDE
+
+            #pragma multi_compile _ _REVERT_COLOR
 
             #pragma vertex vert_toonShading
             

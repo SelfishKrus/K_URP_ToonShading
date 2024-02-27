@@ -203,6 +203,10 @@
             col = float3(IN.uv2, 1);
         #endif
 
+        #ifdef _REVERT_COLOR
+            col = 1 - col;
+        #endif
+
         return half4(col, 1);
         
     }

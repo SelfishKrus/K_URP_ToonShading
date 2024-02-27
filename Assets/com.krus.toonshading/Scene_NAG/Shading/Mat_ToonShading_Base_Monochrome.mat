@@ -160,12 +160,13 @@ Material:
     - _QueueOffset: 0
     - _ReceiveCustomShadows: 0
     - _ReceiveShadows: 1
+    - _RevertColor: 0
     - _RimSpecular: 1
     - _RimSpecularDetail: 0.2
     - _RimSpecularSmoothness: 0.01
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
-    - _RimSpecularWidth: 0.8
+    - _RimSpecularWidth: 1.2
     - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 1
@@ -191,11 +192,11 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissiveCol: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RimSpecularCol: {r: 0.99999994, g: 0.99999994, b: 0.99999994, a: 1}
+    - _RimSpecularCol: {r: 1.4980394, g: 1.4980394, b: 1.4980394, a: 1}
     - _RimSpecularCol_Bright: {r: 1, g: 1, b: 0.5431267, a: 1}
     - _RimSpecularCol_Dark: {r: 1, g: 0.5254902, b: 0.6007628, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpecularCol: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularCol: {r: 2, g: 2, b: 2, a: 1}
     - _Test: {r: 0.73, g: 0.51, b: 0, a: 0}
     - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}

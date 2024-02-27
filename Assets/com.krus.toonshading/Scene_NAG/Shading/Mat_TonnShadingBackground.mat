@@ -68,14 +68,15 @@ Material:
     - _RECEIVE_CUSTOM_SHADOW: 1
     - _ReceiveCustomShadows: 1
     - _ReceiveShadows: 1
+    - _RevertColor: 0
     - _RimSpecular: 0
     - _RimSpecularDetail: 0.35
     - _RimSpecularSmoothness: 0.05
     - _RimSpecularSwitch: 0
     - _RimSpecularWidth: 0.65
     - _ShadowCurveRemap: 0
-    - _ShadowSmoothness: 0.503
-    - _ShadowThreshold: 0.5
+    - _ShadowSmoothness: 0.385
+    - _ShadowThreshold: 0.681
     - _SpecularSmoothness: 0
     - _SpecularThreshold: 0.35
     - _TexLines: 1
