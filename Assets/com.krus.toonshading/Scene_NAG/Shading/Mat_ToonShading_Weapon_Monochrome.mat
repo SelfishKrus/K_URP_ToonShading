@@ -169,7 +169,7 @@ Material:
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSmoothness: 0.05
+    - _SpecularSmoothness: 0.01
     - _SpecularThreshold: 0.4
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
