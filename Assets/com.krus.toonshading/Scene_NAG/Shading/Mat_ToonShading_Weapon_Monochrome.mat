@@ -144,7 +144,7 @@ Material:
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
-    - _Glossiness: 2
+    - _Glossiness: 5
     - _GlossyReflections: 0
     - _MAT_OVERRIDE: 1
     - _Metallic: 0
@@ -158,18 +158,18 @@ Material:
     - _ReceiveShadows: 1
     - _RevertColor: 0
     - _RimSpecular: 1
-    - _RimSpecularDetail: 0.15
-    - _RimSpecularSmoothness: 0.01
+    - _RimSpecularDetail: 0.3
+    - _RimSpecularSmoothness: 0.1
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
-    - _RimSpecularWidth: 0.85
+    - _RimSpecularWidth: 0.8
     - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSmoothness: 0
+    - _SpecularSmoothness: 0.05
     - _SpecularThreshold: 0.4
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1

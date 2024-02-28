@@ -162,8 +162,8 @@ Material:
     - _ReceiveShadows: 1
     - _RevertColor: 0
     - _RimSpecular: 1
-    - _RimSpecularDetail: 0.2
-    - _RimSpecularSmoothness: 0.01
+    - _RimSpecularDetail: 0.5
+    - _RimSpecularSmoothness: 0.1
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
     - _RimSpecularWidth: 1.2
