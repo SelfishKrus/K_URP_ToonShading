@@ -196,7 +196,7 @@
 
         // FINAL COLOR // 
         half3 col;
-        col = diffuse + specular + rimSpecular + emissive;
+        col = diffuse + (specular + rimSpecular + emissive) * 1.2f;
         col *= innerLines;
 
         #ifdef _UV2_CHECK

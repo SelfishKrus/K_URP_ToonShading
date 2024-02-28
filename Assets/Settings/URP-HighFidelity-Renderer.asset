@@ -50,8 +50,8 @@ MonoBehaviour:
       type: 3}
   m_RendererFeatures:
   - {fileID: -7629024863236944648}
-  - {fileID: 2657281722380463427}
-  m_RendererFeatureMap: f88c23a44e422096432da0caa58fe024
+  - {fileID: 3907859458070127845}
+  m_RendererFeatureMap: f88c23a44e422096e5a46bee78813b36
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &2657281722380463427
+--- !u!114 &3907859458070127845
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,8 +103,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e32e72b6a3f58a24c9033e2b9275eea0, type: 3}
-  m_Name: ScreenSpaceShadows
+  m_Script: {fileID: 11500000, guid: 88172976bdc5c854390f272911a28fd9, type: 3}
+  m_Name: StrikeBloomRendererFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  m_Shader: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd, type: 3}
+  settings:
+    material: {fileID: 2100000, guid: 8e9fcdecdfe6aed439ab762d193d8ede, type: 2}
+    renderPassEvent: 550
+    colorTargetDestinationID: _CamColTex
+    threshold: 0.25
