@@ -1,4 +1,4 @@
-Shader "Blit/StrikeBloom"
+Shader "Blit/StreakBloom"
 {   
     HLSLINCLUDE
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -8,11 +8,14 @@ Shader "Blit/StrikeBloom"
 
     TEXTURE2D_X(_CamColTex);
     TEXTURE2D(_InputTex);   SAMPLER(sampler_InputTex);
+    TEXTURE2D(_HighTex);   SAMPLER(sampler_HighTex);
 
     float4 _InputTex_TexelSize;
 
-
     float _Threshold;
+    float _Stretch;
+    float _Intensity;
+    float3 _Color;
 
     // Prefilter
     // Filter out bright pixels
@@ -58,6 +61,58 @@ Shader "Blit/StrikeBloom"
         
     }
 
+    // Upsampler
+    // _InputTexture - downsampled texture
+    // _HighTexture - blurred original texture
+    float4 FragUpsample(Varyings input) : SV_Target
+    {
+        UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+
+        float2 uv = input.texcoord;
+        const float dx = _InputTex_TexelSize.x * 1.5;
+
+        float u0 = uv.x - dx;
+        float u1 = uv.x;
+        float u2 = uv.x + dx;
+
+        float3 c0 = SAMPLE_TEXTURE2D(_InputTex, sampler_InputTex, float2(u0, uv.y)).rgb;
+        float3 c1 = SAMPLE_TEXTURE2D(_InputTex, sampler_InputTex, float2(u1, uv.y)).rgb;
+        float3 c2 = SAMPLE_TEXTURE2D(_InputTex, sampler_InputTex, float2(u2, uv.y)).rgb;
+        float3 c3 = SAMPLE_TEXTURE2D(_HighTex,  sampler_HighTex, uv).rgb;
+
+        return float4(lerp(c3, c0 / 4 + c1 / 2 + c2 / 4, _Stretch), 1);
+
+        // test 
+        // return float4(c0 / 4 + c1 / 2 + c2 / 4, 1);
+        // return float4(c3, 1);
+    }
+
+    // Final composition
+    // Upsampled texture + original texture
+    float4 FragComposition(Varyings input) : SV_Target
+    {
+        UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+
+        float2 uv = input.texcoord;
+        uint2 positionSS = uv * _ScreenSize.xy;
+        const float dx = _InputTex_TexelSize.x * 1.5;
+
+        float u0 = uv.x - dx;
+        float u1 = uv.x;
+        float u2 = uv.x + dx;
+
+        float3 c0 = SAMPLE_TEXTURE2D(_InputTex, sampler_InputTex, float2(u0, uv.y)).rgb;
+        float3 c1 = SAMPLE_TEXTURE2D(_InputTex, sampler_InputTex, float2(u1, uv.y)).rgb;
+        float3 c2 = SAMPLE_TEXTURE2D(_InputTex, sampler_InputTex, float2(u2, uv.y)).rgb;
+        float3 c3 = LOAD_TEXTURE2D_X(_CamColTex, positionSS).rgb;
+        float3 cf = (c0 / 4 + c1 / 2 + c2 / 4) * _Color * _Intensity * 5;
+
+        return float4(cf + c3, 1);
+
+        // test 
+        // return float4(c0, 1);
+    }
+
     ENDHLSL
 
     SubShader
@@ -83,6 +138,26 @@ Shader "Blit/StrikeBloom"
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment FragDownsample
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Upsample"
+
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment FragUpsample
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Composition"
+
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment FragComposition
             ENDHLSL
         }
     }

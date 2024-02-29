@@ -111,4 +111,7 @@ MonoBehaviour:
     material: {fileID: 2100000, guid: 8e9fcdecdfe6aed439ab762d193d8ede, type: 2}
     renderPassEvent: 550
     colorTargetDestinationID: _CamColTex
-    threshold: 0.25
+    threshold: 0.77
+    stretch: 34.26
+    intensity: 1
+    color: {r: 1, g: 1, b: 1, a: 1}

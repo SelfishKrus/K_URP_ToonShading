@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_Blit_StrikeBloom
+  m_Name: Mat_Blit_StreakBloom
   m_Shader: {fileID: 4800000, guid: 99e8074e0f54ae540a5e78f67604944d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

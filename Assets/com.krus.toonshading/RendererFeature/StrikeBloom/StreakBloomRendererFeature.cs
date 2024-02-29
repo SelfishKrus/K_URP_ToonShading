@@ -7,7 +7,7 @@ using SerializableAttribute = System.SerializableAttribute;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
 
-internal class StrikeBloomRendererFeature : ScriptableRendererFeature
+internal class StreakBloomRendererFeature : ScriptableRendererFeature
 {   
 
     //////////////
@@ -15,7 +15,7 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
     //////////////
 
     [System.Serializable]
-    public class StrkeBloomSettings 
+    public class StreakBloomSettings 
     {   
         [Header("Render Pass")]
         public Material material;
@@ -23,21 +23,24 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
         public string colorTargetDestinationID = "_CamColTex";
 
         public float threshold = 1.0f;
+        public float stretch = 1.0f;
+        public float intensity = 1.0f;
+        public Color color = new Color(1.0f, 1.0f, 1.0f);
     }
 
     //////////////////////
     // Renderer Feature // 
     //////////////////////
 
-    public StrkeBloomSettings settings = new StrkeBloomSettings();
+    public StreakBloomSettings settings = new StreakBloomSettings();
 
     Material m_Material;
 
-    StrkeBloomRenderPass m_RenderPass = null;
+    StreakBloomRenderPass m_RenderPass = null;
 
     public override void Create()
     {
-        m_RenderPass = new StrkeBloomRenderPass(settings);
+        m_RenderPass = new StreakBloomRenderPass(settings);
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer,
@@ -65,17 +68,16 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
     //   Renderer Pass  // 
     //////////////////////
 
-    internal class StrkeBloomRenderPass : ScriptableRenderPass
+    internal class StreakBloomRenderPass : ScriptableRenderPass
     {   
         ProfilingSampler m_profilingSampler = new ProfilingSampler("Outline");
         Material m_material;
         RTHandle m_cameraColorTarget;
         RTHandle rtCustomColor, rtTempColor;
-        StrkeBloomSettings m_settings;
+        StreakBloomSettings m_settings;
 
-        public StrkeBloomRenderPass(StrkeBloomSettings settings)
+        public StreakBloomRenderPass(StreakBloomSettings settings)
         {   
-            m_material = settings.material;
             this.m_settings = settings;
             renderPassEvent = m_settings.renderPassEvent;
         }
@@ -89,6 +91,9 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
         public void PassShaderData(Material material)
         {
             material.SetFloat("_Threshold", m_settings.threshold);
+            material.SetFloat("_Stretch", m_settings.stretch);
+            material.SetFloat("_Intensity", m_settings.intensity);
+            material.SetVector("_Color", m_settings.color);
         }
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -109,12 +114,13 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
             ConfigureTarget(m_cameraColorTarget);
             ConfigureTarget(rtCustomColor);
             ConfigureTarget(rtTempColor);
+
+            m_material = m_settings.material;
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cameraData = renderingData.cameraData;
-            
 
             if (m_material == null)
                 return;
@@ -131,11 +137,7 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
                 m_material.SetTexture("_CamColTex", m_cameraColorTarget);
                 Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, rtCustomColor, m_material, 0);
 
-                // Downsample
-                m_material.SetTexture("_InputTex", rtCustomColor);
-                Blitter.BlitCameraTexture(cmd, rtCustomColor, rtTempColor, m_material, 1);
-
-                Blitter.BlitCameraTexture(cmd, rtTempColor, m_cameraColorTarget);
+                Blitter.BlitCameraTexture(cmd, rtCustomColor, m_cameraColorTarget);
             }
 
             context.ExecuteCommandBuffer(cmd);
@@ -147,18 +149,38 @@ internal class StrikeBloomRendererFeature : ScriptableRendererFeature
 
         public override void OnCameraCleanup(CommandBuffer cmd)
         {
-
-        }
-
-        public override void FrameCleanup(CommandBuffer cmd)
-        {
-            base.FrameCleanup(cmd);
-
+            base.OnCameraCleanup(cmd);
+            cmd.ReleaseTemporaryRT(rtCustomColor.GetInstanceID());
+            cmd.ReleaseTemporaryRT(rtTempColor.GetInstanceID());
+            cmd.ReleaseTemporaryRT(m_cameraColorTarget.GetInstanceID());
         }
 
         public void Dispose()
         {
+            rtCustomColor?.Release();
+            rtTempColor?.Release();
+        }
 
+        // Pyramid to store images
+        Dictionary<int, StreakPyramid> _pyramids;
+
+        StreakPyramid GetPyramid(Camera camera)
+        {
+            StreakPyramid candid;
+            var cameraID = camera.GetInstanceID();
+
+            if (_pyramids.TryGetValue(cameraID, out candid))
+            {
+                // Reallocate the RTs when the screen size was changed.
+                if (!candid.CheckSize(camera)) candid.Reallocate(camera);
+            }
+            else
+            {
+                // No one found: Allocate a new pyramid.
+                _pyramids[cameraID] = candid = new StreakPyramid(camera);
+            }
+
+            return candid;
         }
     }
 
