@@ -157,8 +157,8 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
         public void Dispose()
         {
-            rtCustomColor?.Release();
-            rtTempColor?.Release();
+            RTHandles.Release(rtCustomColor);
+            RTHandles.Release(rtTempColor);
         }
 
         // Pyramid to store images
