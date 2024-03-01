@@ -117,11 +117,7 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             ConfigureTarget(m_cameraColorTarget);
             ConfigureTarget(rtTempColor0);
             ConfigureTarget(rtTempColor1);
-
-            // Configure render target for _pyramids
-            pyramid = GetPyramid(renderingData.cameraData.camera);
-            // pyramid.ConfigureTarget(this);
-            
+        
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -147,17 +143,18 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
                 
                 Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, rtTempColor0, m_material, 0);
                 Blitter.BlitCameraTexture(cmd, rtTempColor0, m_cameraColorTarget);
+
             }
 
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
 
             CommandBufferPool.Release(cmd);
+
         }
 
         public override void OnCameraCleanup(CommandBuffer cmd)
         {
-        
         }
 
         public void Dispose()
@@ -165,7 +162,7 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             if (rtTempColor0 != null) RTHandles.Release(rtTempColor0);
             if (rtTempColor1 != null) RTHandles.Release(rtTempColor1);
 
-            foreach (var pyramid in _pyramids.Values) pyramid.Release();
+            if (pyramid != null) pyramid.Release();
         }
 
         // Pyramid to store images
@@ -240,12 +237,20 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
             _mips[0] = (RTHandles.Alloc(width, height, colorFormat: RTFormat), null);
 
-            for (var i = 1; i < MaxMipLevel; i++)
+            for (int i = 1; i < MaxMipLevel; i++)
             {
-                width /= 2;
-                _mips[i] = width < 4 ?  (null, null) :
-                    (RTHandles.Alloc(width, height, colorFormat: RTFormat),
-                     RTHandles.Alloc(width, height, colorFormat: RTFormat));
+                width = Mathf.Max(1, width / 2);
+                height = Mathf.Max(1, height / 2);
+
+                var desc = new RenderTextureDescriptor(width, height, RenderTextureFormat.ARGBHalf, 0, MaxMipLevel)
+                {
+                    useMipMap = true,
+                    autoGenerateMips = false,
+                    enableRandomWrite = true
+                };
+
+                _mips[i].down = RTHandles.Alloc(desc);
+                _mips[i].up = RTHandles.Alloc(desc);
             }
         }
     }

@@ -77,7 +77,6 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
 
     protected override void Dispose(bool disposing)
     {
-        CoreUtils.Destroy(m_Material);
         m_RenderPass.Dispose();
     }
 
@@ -143,7 +142,6 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
             RenderingUtils.ReAllocateIfNeeded(ref rtCustomColor, colorDesc, name: "_RTCustomColor");
             RenderingUtils.ReAllocateIfNeeded(ref rtTempColor, colorDesc, name: "_RTTempColor");
 
-
             ConfigureTarget(m_cameraColorTarget);
             ConfigureTarget(rtCustomColor);
             ConfigureTarget(rtTempColor);
@@ -153,7 +151,6 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
         {
             var cameraData = renderingData.cameraData;
             
-
             if (m_material == null)
                 return;
 
@@ -193,8 +190,8 @@ internal class OutlineRendererFeature : ScriptableRendererFeature
 
         public void Dispose()
         {
-            // rtCustomColor.Release();
-            // rtTempColor.Release();
+            RTHandles.Release(rtCustomColor);
+            RTHandles.Release(rtTempColor);
         }
     }
 }
