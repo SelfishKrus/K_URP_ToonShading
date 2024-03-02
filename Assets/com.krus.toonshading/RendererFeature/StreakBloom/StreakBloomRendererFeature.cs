@@ -70,7 +70,8 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
         RTHandle rtTempColor0, rtTempColor1;
         StreakBloomSettings m_settings;
 
-        StreakPyramid pyramid;
+        const int MaxMipMapLevel = 16;
+        (RTHandle down, RTHandle up)[] mips = new (RTHandle down, RTHandle up) [MaxMipMapLevel];
 
         public StreakBloomRenderPass(StreakBloomSettings settings)
         {   
@@ -85,6 +86,8 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {   
+            Dispose();
+
             var colorDesc = renderingData.cameraData.cameraTargetDescriptor;
             colorDesc.colorFormat = RenderTextureFormat.ARGB32;
             colorDesc.depthBufferBits = 0;
@@ -94,7 +97,6 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             m_cameraColorTarget = renderer.cameraColorTargetHandle;
 
             // Set up temporary color buffer (for blit)
-
             RenderingUtils.ReAllocateIfNeeded(ref rtTempColor0, colorDesc, name: "_RTTempColor0");
             RenderingUtils.ReAllocateIfNeeded(ref rtTempColor1, colorDesc, name: "_RTTempColor1");
 
@@ -104,6 +106,24 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             ConfigureTarget(rtTempColor0);
             ConfigureTarget(rtTempColor1);
         
+            // initialize mipmap chain
+            var width = colorDesc.width;
+            var height = colorDesc.height / 2;
+            var RTFormat = GraphicsFormat.R16G16B16A16_SFloat;
+            mips[0] = (RTHandles.Alloc(width, height, colorFormat: RTFormat), null);
+            for (int i = 1; i < MaxMipMapLevel; i++)
+            {
+                width /= 2;
+                if ( width < 4) 
+                {
+                    mips[i] = (null, null);
+                }
+                else
+                {
+                    mips[i].down = RTHandles.Alloc(width, height, colorFormat: RTFormat);
+                    mips[i].up = RTHandles.Alloc(width, height, colorFormat: RTFormat);
+                }
+            }
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -123,11 +143,8 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
                 // Prefilter
                 // CameraColorTarget -> Prefilter -> MIP 0
-                // Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, pyramid[0].down, m_material, 0);
-                // Blitter.BlitCameraTexture(cmd, pyramid[0].down, m_cameraColorTarget);
-                
-                Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, rtTempColor0, m_material, 0);
-                Blitter.BlitCameraTexture(cmd, rtTempColor0, m_cameraColorTarget);
+                Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, mips[0].down, m_material, 0);
+                Blitter.BlitCameraTexture(cmd, mips[0].down, m_cameraColorTarget);
 
             }
 
@@ -147,98 +164,12 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             if (rtTempColor0 != null) RTHandles.Release(rtTempColor0);
             if (rtTempColor1 != null) RTHandles.Release(rtTempColor1);
 
-            if (pyramid != null) pyramid.Release();
-        }
-
-        // Pyramid to store images
-        Dictionary<int, StreakPyramid> _pyramids;
-
-        StreakPyramid GetPyramid(Camera camera)
-        {
-            StreakPyramid candid;
-            candid = new StreakPyramid(camera);
-            
-            return candid;
-        }
-    }
-
-    #region Image pyramid class used in Streak effect
-
-    sealed class StreakPyramid
-    {
-        public const int MaxMipLevel = 8;
-
-        int _baseWidth, _baseHeight;
-        readonly (RTHandle down, RTHandle up) [] _mips = new (RTHandle, RTHandle) [MaxMipLevel];
-
-        public (RTHandle down, RTHandle up) this [int index]
-        {
-            get { return _mips[index]; }
-        }
-
-        public StreakPyramid(Camera camera)
-        {
-            Allocate(camera);
-        }
-
-        public bool CheckSize(Camera camera)
-        {
-            return _baseWidth == camera.scaledPixelWidth && _baseHeight == camera.scaledPixelHeight;
-        }
-
-        public void Reallocate(Camera camera)
-        {
-            Release();
-            Allocate(camera);
-        }
-
-        public void ConfigureTarget(ScriptableRenderPass renderPass)
-        {
-            foreach (var mip in _mips)
+            for (int i = 0; i < MaxMipMapLevel; i++)
             {
-                if (mip.down != null) renderPass.ConfigureTarget(mip.down);
-                if (mip.up   != null) renderPass.ConfigureTarget(mip.up);
-            }
-        }
-
-        public void Release()
-        {
-            foreach (var mip in _mips)
-            {
-                if (mip.down != null) RTHandles.Release(mip.down);
-                if (mip.up   != null) RTHandles.Release(mip.up);
-            }
-        }
-
-        void Allocate(Camera camera)
-        {
-            _baseWidth = camera.scaledPixelWidth;
-            _baseHeight = camera.scaledPixelHeight;
-
-            var width = _baseWidth / 2;
-            var height = _baseHeight / 4;
-
-            const GraphicsFormat RTFormat = GraphicsFormat.R16G16B16A16_SFloat;
-
-            _mips[0] = (RTHandles.Alloc(width, height, colorFormat: RTFormat), null);
-
-            for (int i = 1; i < MaxMipLevel; i++)
-            {
-                width = Mathf.Max(1, width / 2);
-                height = Mathf.Max(1, height / 2);
-
-                var desc = new RenderTextureDescriptor(width, height, RenderTextureFormat.ARGBHalf, 0, MaxMipLevel)
-                {
-                    useMipMap = true,
-                    autoGenerateMips = false,
-                    enableRandomWrite = true
-                };
-
-                _mips[i].down = RTHandles.Alloc(desc);
-                _mips[i].up = RTHandles.Alloc(desc);
+                if (mips[i].down != null) RTHandles.Release(mips[i].down);
+                if (mips[i].up != null) RTHandles.Release(mips[i].up);
             }
         }
     }
 
-    #endregion
 }
