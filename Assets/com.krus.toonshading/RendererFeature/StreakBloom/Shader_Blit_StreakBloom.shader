@@ -1,5 +1,13 @@
 Shader "Blit/StreakBloom"
 {   
+    Properties
+    {
+        _Threshold ("Threshold", Range(0, 5)) = 0.5
+        _Stretch ("Stretch", Range(0, 5)) = 0.5
+        _Intensity ("Intensity", Range(0, 5)) = 0.5
+        _Color ("Color", Color) = (1, 1, 1, 1)
+    
+    }
     HLSLINCLUDE
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
     // The Blit.hlsl file provides the vertex shader (Vert),

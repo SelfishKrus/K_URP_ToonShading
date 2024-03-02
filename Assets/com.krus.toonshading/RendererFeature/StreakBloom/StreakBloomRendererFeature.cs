@@ -21,11 +21,6 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
         public Material material;
         public RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
         public string colorTargetDestinationID = "_CamColTex";
-
-        public float threshold = 1.0f;
-        public float stretch = 1.0f;
-        public float intensity = 1.0f;
-        public Color color = new Color(1.0f, 1.0f, 1.0f);
     }
 
     //////////////////////
@@ -88,15 +83,6 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             m_cameraColorTarget = colorHandle;
         }
 
-        // Pass Data //
-        public void PassShaderData(Material material)
-        {
-            material.SetFloat("_Threshold", m_settings.threshold);
-            material.SetFloat("_Stretch", m_settings.stretch);
-            material.SetFloat("_Intensity", m_settings.intensity);
-            material.SetVector("_Color", m_settings.color);
-        }
-
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {   
             var colorDesc = renderingData.cameraData.cameraTargetDescriptor;
@@ -133,7 +119,6 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             {   
 
                 m_material.SetTexture("_CamColTex", m_cameraColorTarget);
-                PassShaderData(m_material);
                 // pyramid = GetPyramid(renderingData.cameraData.camera);
 
                 // Prefilter
