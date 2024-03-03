@@ -6,6 +6,7 @@ using GraphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat;
 using SerializableAttribute = System.SerializableAttribute;
 using System.Collections.Generic;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Experimental.GlobalIllumination;
 
 internal class StreakBloomRendererFeature : ScriptableRendererFeature
 {   
@@ -21,6 +22,9 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
         public Material material;
         public RenderPassEvent renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
         public string colorTargetDestinationID = "_CamColTex";
+
+        [Range(1,4)]
+        public int downSample = 2;
     }
 
     //////////////////////
@@ -41,10 +45,13 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
     public override void AddRenderPasses(ScriptableRenderer renderer,
                                     ref RenderingData renderingData)
     {
-        // if (renderingData.cameraData.camera.cameraType != CameraType.Game && renderingData.cameraData.camera.cameraType != CameraType.SceneView)
+        if (renderingData.cameraData.camera.cameraType == CameraType.Game)
+        {
             renderer.EnqueuePass(m_RenderPass);
             m_RenderPass.ConfigureInput(ScriptableRenderPassInput.Color);
             m_RenderPass.ConfigureInput(ScriptableRenderPassInput.Normal);
+        }
+
     }
 
     public override void SetupRenderPasses(ScriptableRenderer renderer,
@@ -54,7 +61,8 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
     }
 
     protected override void Dispose(bool disposing)
-    {
+    {   
+        base.Dispose(disposing);
         m_RenderPass.Dispose();
     }
 
@@ -89,17 +97,16 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
             Dispose();
 
-            var colorDesc = renderingData.cameraData.cameraTargetDescriptor;
-            colorDesc.colorFormat = RenderTextureFormat.ARGB32;
-            colorDesc.depthBufferBits = 0;
+            var camDesc = renderingData.cameraData.cameraTargetDescriptor;
+            camDesc.colorFormat = RenderTextureFormat.ARGB32;
+            camDesc.depthBufferBits = 0;
 
-            var renderer = renderingData.cameraData.renderer;
             // set target
-            m_cameraColorTarget = renderer.cameraColorTargetHandle;
+            m_cameraColorTarget = renderingData.cameraData.renderer.cameraColorTargetHandle;
 
             // Set up temporary color buffer (for blit)
-            RenderingUtils.ReAllocateIfNeeded(ref rtTempColor0, colorDesc, name: "_RTTempColor0");
-            RenderingUtils.ReAllocateIfNeeded(ref rtTempColor1, colorDesc, name: "_RTTempColor1");
+            RenderingUtils.ReAllocateIfNeeded(ref rtTempColor0, camDesc, name: "_RTTempColor0");
+            RenderingUtils.ReAllocateIfNeeded(ref rtTempColor1, camDesc, name: "_RTTempColor1");
 
             m_material = m_settings.material;
 
@@ -108,10 +115,14 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             ConfigureTarget(rtTempColor1);
         
             // initialize mipmap chain
-            var width = colorDesc.width;
-            var height = colorDesc.height / 2;
-            var RTFormat = GraphicsFormat.R16G16B16A16_SFloat;
-            mips[0] = (RTHandles.Alloc(width, height, colorFormat: RTFormat), null);
+            var width = camDesc.width / m_settings.downSample;
+            var height = camDesc.height / 2 / m_settings.downSample;
+            camDesc.colorFormat = RenderTextureFormat.DefaultHDR;
+
+            camDesc.width = width;
+            camDesc.height = height;
+            RenderingUtils.ReAllocateIfNeeded(ref mips[0].down, camDesc, name: "_RTMipDown0");
+
             for (int i = 1; i < MaxMipMapLevel; i++)
             {
                 width /= 2;
@@ -121,11 +132,11 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
                 }
                 else
                 {   
-                    colorDesc.width = width;
-                    colorDesc.height = height;
+                    camDesc.width = width;
+                    camDesc.height = height;
 
-                    RenderingUtils.ReAllocateIfNeeded(ref mips[i].down, colorDesc, name: "_RTMipDown" + i);
-                    RenderingUtils.ReAllocateIfNeeded(ref mips[i].down, colorDesc, name: "_RTMipDown" + i);
+                    RenderingUtils.ReAllocateIfNeeded(ref mips[i].down, camDesc, name: "_RTMipDown" + i);
+                    RenderingUtils.ReAllocateIfNeeded(ref mips[i].up, camDesc, name: "_RTMipUp" + i);
                 }
             }
         }
@@ -138,93 +149,64 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             if (m_cameraColorTarget.rt == null)
                 return;
 
-            CommandBuffer cmd = CommandBufferPool.Get();
+            CommandBuffer cmd = CommandBufferPool.Get("");
             using (UnityEngine.Rendering.ProfilingScope profilingScope = new UnityEngine.Rendering.ProfilingScope(cmd, m_profilingSampler))
             {   
                 MaterialPropertyBlock s_PropertyBlock = new MaterialPropertyBlock();
 
-                float nearClipZ = -1;
-                if (SystemInfo.usesReversedZBuffer)
-                    nearClipZ = 1;
-
-                Mesh s_TriangleMesh = new Mesh();
-                
-                s_TriangleMesh.vertices = GetFullScreenTriangleVertexPosition(nearClipZ);
-                s_TriangleMesh.uv = GetFullScreenTriangleTexCoord();
-                s_TriangleMesh.triangles = new int[3] { 0, 1, 2 };
-
-                CoreUtils.SetRenderTarget(cmd, m_cameraColorTarget);
                 m_material.SetTexture("_CamColTex", m_cameraColorTarget);
-                s_PropertyBlock.SetTexture("_CamColTex", m_cameraColorTarget);
-                cmd.DrawMesh(s_TriangleMesh, Matrix4x4.identity, m_material, 0, 0, s_PropertyBlock);
-
-                // int level = 1;
-                // for (; level < MaxMipMapLevel && mips[level].down != null ; level++)
-                // {   
-                //     s_PropertyBlock.SetTexture("_InputTex", mips[level - 1].down);
-                //     m_material.SetTexture("_InputTex", mips[level - 1].down);
-                //     CoreUtils.SetRenderTarget(cmd, mips[level].down);
-                //     Blitter.BlitTexture(cmd, mips[level - 1].down, Vector2.one, m_material, 0);
-                // }
-
-                // cmd.SetGlobalTexture("_CamColTex", rtTempColor0);
-                // CoreUtils.SetRenderTarget(cmd, m_cameraColorTarget);
-                // cmd.DrawProcedural(Matrix4x4.identity, m_material, 0, MeshTopology.Triangles, 3, 1, s_PropertyBlock);
 
                 // Prefilter
                 // CameraColorTarget -> Prefilter -> MIP 0
-                
+                Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, mips[0].down, m_material, 0);
+
+                // Downsample
+                int level = 1;
+                for (; level < MaxMipMapLevel && mips[level].down != null; level++)
+                {   
+                    Blitter.BlitCameraTexture(cmd, mips[level - 1].down, mips[level].down, m_material, 1);
+                }
+
+                // Upsample
+                var lastRT = mips[--level].down;
+                for (level--; level >= 0 && mips[level].up != null; level--)
+                {
+                    var mip = mips[level];
+                    m_material.SetTexture("_HighTex", mip.down);
+                    Blitter.BlitCameraTexture(cmd, lastRT, mip.up, m_material, 2);
+                    lastRT = mip.up;
+                }
+
+                // Final composition
+                Blitter.BlitCameraTexture(cmd, lastRT, m_cameraColorTarget, m_material, 3);
+
             }
 
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
 
             CommandBufferPool.Release(cmd);
-
         }
 
         public override void OnCameraCleanup(CommandBuffer cmd)
-        {
+        {   
             base.OnCameraCleanup(cmd);
+            Dispose();
         }
 
         public void Dispose()
         {   
-            if (rtTempColor0 != null) RTHandles.Release(rtTempColor0);
-            if (rtTempColor1 != null) RTHandles.Release(rtTempColor1);
+            if (rtTempColor0 != null) rtTempColor0.Release();
+            if (rtTempColor1 != null) rtTempColor1.Release();
 
             for (int i = 0; i < MaxMipMapLevel; i++)
             {
-                if (mips[i].down != null) RTHandles.Release(mips[i].down);
-                if (mips[i].up != null) RTHandles.Release(mips[i].up);
+                if (mips[i].down != null) mips[i].down.Release();
+                if (mips[i].up != null) mips[i].up.Release();
             }
         }
 
         #region PRIVATE_METHODS
-
-        static Vector3[] GetFullScreenTriangleVertexPosition(float z /*= UNITY_NEAR_CLIP_VALUE*/)
-        {
-            var r = new Vector3[3];
-            for (int i = 0; i < 3; i++)
-            {
-                Vector2 uv = new Vector2((i << 1) & 2, i & 2);
-                r[i] = new Vector3(uv.x * 2.0f - 1.0f, uv.y * 2.0f - 1.0f, z);
-            }
-            return r;
-        }
-
-        static Vector2[] GetFullScreenTriangleTexCoord()
-        {
-            var r = new Vector2[3];
-            for (int i = 0; i < 3; i++)
-            {
-                if (SystemInfo.graphicsUVStartsAtTop)
-                    r[i] = new Vector2((i << 1) & 2, 1.0f - (i & 2));
-                else
-                    r[i] = new Vector2((i << 1) & 2, i & 2);
-            }
-            return r;
-        }
 
         #endregion
     }
