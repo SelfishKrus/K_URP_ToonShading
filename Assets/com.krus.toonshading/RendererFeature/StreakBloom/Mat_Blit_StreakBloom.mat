@@ -35,7 +35,7 @@ Material:
     m_Floats:
     - _Intensity: 0.5
     - _Stretch: 0.5
-    - _Threshold: 0.15
+    - _Threshold: 0.23
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

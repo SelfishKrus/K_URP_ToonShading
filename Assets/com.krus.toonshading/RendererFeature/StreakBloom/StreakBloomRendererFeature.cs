@@ -86,6 +86,7 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {   
+
             Dispose();
 
             var colorDesc = renderingData.cameraData.cameraTargetDescriptor;
@@ -119,9 +120,12 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
                     mips[i] = (null, null);
                 }
                 else
-                {
-                    mips[i].down = RTHandles.Alloc(width, height, colorFormat: RTFormat);
-                    mips[i].up = RTHandles.Alloc(width, height, colorFormat: RTFormat);
+                {   
+                    colorDesc.width = width;
+                    colorDesc.height = height;
+
+                    RenderingUtils.ReAllocateIfNeeded(ref mips[i].down, colorDesc, name: "_RTMipDown" + i);
+                    RenderingUtils.ReAllocateIfNeeded(ref mips[i].down, colorDesc, name: "_RTMipDown" + i);
                 }
             }
         }
@@ -137,15 +141,39 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
             CommandBuffer cmd = CommandBufferPool.Get();
             using (UnityEngine.Rendering.ProfilingScope profilingScope = new UnityEngine.Rendering.ProfilingScope(cmd, m_profilingSampler))
             {   
+                MaterialPropertyBlock s_PropertyBlock = new MaterialPropertyBlock();
 
+                float nearClipZ = -1;
+                if (SystemInfo.usesReversedZBuffer)
+                    nearClipZ = 1;
+
+                Mesh s_TriangleMesh = new Mesh();
+                
+                s_TriangleMesh.vertices = GetFullScreenTriangleVertexPosition(nearClipZ);
+                s_TriangleMesh.uv = GetFullScreenTriangleTexCoord();
+                s_TriangleMesh.triangles = new int[3] { 0, 1, 2 };
+
+                CoreUtils.SetRenderTarget(cmd, m_cameraColorTarget);
                 m_material.SetTexture("_CamColTex", m_cameraColorTarget);
-                // pyramid = GetPyramid(renderingData.cameraData.camera);
+                s_PropertyBlock.SetTexture("_CamColTex", m_cameraColorTarget);
+                cmd.DrawMesh(s_TriangleMesh, Matrix4x4.identity, m_material, 0, 0, s_PropertyBlock);
+
+                // int level = 1;
+                // for (; level < MaxMipMapLevel && mips[level].down != null ; level++)
+                // {   
+                //     s_PropertyBlock.SetTexture("_InputTex", mips[level - 1].down);
+                //     m_material.SetTexture("_InputTex", mips[level - 1].down);
+                //     CoreUtils.SetRenderTarget(cmd, mips[level].down);
+                //     Blitter.BlitTexture(cmd, mips[level - 1].down, Vector2.one, m_material, 0);
+                // }
+
+                // cmd.SetGlobalTexture("_CamColTex", rtTempColor0);
+                // CoreUtils.SetRenderTarget(cmd, m_cameraColorTarget);
+                // cmd.DrawProcedural(Matrix4x4.identity, m_material, 0, MeshTopology.Triangles, 3, 1, s_PropertyBlock);
 
                 // Prefilter
                 // CameraColorTarget -> Prefilter -> MIP 0
-                Blitter.BlitCameraTexture(cmd, m_cameraColorTarget, mips[0].down, m_material, 0);
-                Blitter.BlitCameraTexture(cmd, mips[0].down, m_cameraColorTarget);
-
+                
             }
 
             context.ExecuteCommandBuffer(cmd);
@@ -157,6 +185,7 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
 
         public override void OnCameraCleanup(CommandBuffer cmd)
         {
+            base.OnCameraCleanup(cmd);
         }
 
         public void Dispose()
@@ -170,6 +199,34 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
                 if (mips[i].up != null) RTHandles.Release(mips[i].up);
             }
         }
+
+        #region PRIVATE_METHODS
+
+        static Vector3[] GetFullScreenTriangleVertexPosition(float z /*= UNITY_NEAR_CLIP_VALUE*/)
+        {
+            var r = new Vector3[3];
+            for (int i = 0; i < 3; i++)
+            {
+                Vector2 uv = new Vector2((i << 1) & 2, i & 2);
+                r[i] = new Vector3(uv.x * 2.0f - 1.0f, uv.y * 2.0f - 1.0f, z);
+            }
+            return r;
+        }
+
+        static Vector2[] GetFullScreenTriangleTexCoord()
+        {
+            var r = new Vector2[3];
+            for (int i = 0; i < 3; i++)
+            {
+                if (SystemInfo.graphicsUVStartsAtTop)
+                    r[i] = new Vector2((i << 1) & 2, 1.0f - (i & 2));
+                else
+                    r[i] = new Vector2((i << 1) & 2, i & 2);
+            }
+            return r;
+        }
+
+        #endregion
     }
 
 }
