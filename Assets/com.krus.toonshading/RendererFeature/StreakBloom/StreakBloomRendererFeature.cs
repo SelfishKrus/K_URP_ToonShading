@@ -116,7 +116,7 @@ internal class StreakBloomRendererFeature : ScriptableRendererFeature
         
             // initialize mipmap chain
             var width = camDesc.width / m_settings.downSample;
-            var height = camDesc.height / 2 / m_settings.downSample;
+            var height = camDesc.height / m_settings.downSample;
             camDesc.colorFormat = RenderTextureFormat.DefaultHDR;
 
             camDesc.width = width;

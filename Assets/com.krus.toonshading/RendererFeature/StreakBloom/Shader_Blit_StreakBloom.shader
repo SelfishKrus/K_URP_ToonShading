@@ -5,7 +5,7 @@ Shader "Blit/StreakBloom"
         _Threshold ("Threshold", Float) = 0.5
         _Stretch ("Stretch", Float) = 0.5
         _Intensity ("Intensity", Float) = 0.5
-        _Color ("Color", Color) = (1, 1, 1, 1)
+        [HDR] _Color ("Color", Color) = (1, 1, 1, 1)
     
     }
     HLSLINCLUDE
@@ -26,6 +26,8 @@ Shader "Blit/StreakBloom"
     float _Intensity;
     float3 _Color;
 
+    #define _BLUR_STEP 9
+
     // Prefilter
     // Filter out bright pixels
     half4 FragPrefilter (Varyings input) : SV_Target
@@ -33,17 +35,25 @@ Shader "Blit/StreakBloom"
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
         // uv_PS
+        // blur 
         uint2 ss = input.texcoord * _ScreenSize.xy - float2(0, 0.5);
-        float3 c0 = LOAD_TEXTURE2D_X(_BlitTexture, ss).rgb;
-        float3 c1 = LOAD_TEXTURE2D_X(_BlitTexture, ss + uint2(0, 1)).rgb;
-        float3 c = (c0 + c1) / 2;
+        float3 c = 0;
+        for (int i = 0; i < _BLUR_STEP; i++)
+        {
+            for (int j = 0; j < _BLUR_STEP; j++)
+            {
+                uint2 offset = uint2(i - _BLUR_STEP / 2, j - _BLUR_STEP / 2);
+                c += LOAD_TEXTURE2D_X(_BlitTexture, ss + offset).r;
+            }
+        }
+        c /= _BLUR_STEP * _BLUR_STEP;
 
         float br = max(c.r, max(c.g, c.b));
         c *= max(0, br - _Threshold) / max(br, 1e-5);
 
         // test 
         float3 col = LOAD_TEXTURE2D_X(_BlitTexture, ss).rgb;
-        col *= max(0, col - _Threshold) / max(col, 1e-5);
+        col *= max(0, col - _Threshold) / max(col, 1e-8) ;
 
         return float4(c, 1);
     }

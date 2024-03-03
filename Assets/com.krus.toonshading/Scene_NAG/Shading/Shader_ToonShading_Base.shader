@@ -35,7 +35,7 @@ Shader "Krus/ToonShading"
         _Glossiness ("Glossiness", Float) = 5
         _SpecularThreshold ("Specular Threshold", float) = 0.35
         _SpecularSmoothness ("Specular Smoothness", float) = 0.0
-        _SpecularCol ("Specular Color", Color) = (1, 1, 1, 1)
+        [HDR]_SpecularCol ("Specular Color", Color) = (1, 1, 1, 1)
         [Space(10)]
 
         [Header(Rim Specular)]
@@ -44,7 +44,7 @@ Shader "Krus/ToonShading"
         _RimSpecularWidth ("Rim Specular Width (DepthDiff Only)", Float) = 0.65
         _RimSpecularDetail ("Rim Specular Detail", Float) = 0.35
         _RimSpecularSmoothness ("Rim Specular Smoothness", Float) = 0.05
-        _RimSpecularCol ("Rim Specular Color", Color) = (1, 1, 1, 1)
+        [HDR]_RimSpecularCol ("Rim Specular Color", Color) = (1, 1, 1, 1)
         [Space(10)]
         
         [Header(Shadow)]

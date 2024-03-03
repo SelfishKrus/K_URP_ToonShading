@@ -64,7 +64,7 @@ Shader "Krus/Background"
                 // Custom shadow map
                 float2 uv_screen_lightCam = GetLightCameraScreenUV(IN.posWS);
                 #ifdef _RECEIVE_CUSTOM_SHADOW
-                    shadow *= SampleCustomShadowMap_PCF(uv_screen_lightCam, IN.pos);
+                    shadow *= SampleCustomShadowMap_PCF(uv_screen_lightCam, IN.pos, IN.normalWS);
                 #endif
 
                 half3 col = 1;

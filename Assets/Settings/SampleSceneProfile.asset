@@ -18,13 +18,13 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 1.1
+    m_Value: 0.95
   intensity:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 3
   scatter:
     m_OverrideState: 1
-    m_Value: 0.74
+    m_Value: 0.5
   clamp:
     m_OverrideState: 0
     m_Value: 65472
@@ -103,10 +103,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
   m_Name: Tonemapping
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   mode:
-    m_OverrideState: 0
-    m_Value: 2
+    m_OverrideState: 1
+    m_Value: 1
   neutralHDRRangeReductionMode:
     m_OverrideState: 0
     m_Value: 2
