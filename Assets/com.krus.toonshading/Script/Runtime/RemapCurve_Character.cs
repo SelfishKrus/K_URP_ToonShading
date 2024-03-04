@@ -9,8 +9,10 @@ public class RemapCurve_Character : RemapCurve
 {   
     Texture2D characterCurveTexture;
 
-    public float shadowPatternFactor = 0.7f;
-    public float shadowPatternScale = 0.4f;
+    public float shadowPatternThreshold = 0.7f;
+    [Range(0.0f, 0.5f)]
+    public float shadowPatternSmoothness = 0.0f;
+    public float shadowPatternScale = 0.42f;
     int numCurve;
     int id_shadowCurve;
 
@@ -71,7 +73,8 @@ public class RemapCurve_Character : RemapCurve
     {
         material.SetTexture("_CurveTexture", characterCurveTexture);
         material.SetInt("_Id_ShadowCurve", id_shadowCurve);
-        material.SetFloat("_ShadowPatternFactor", shadowPatternFactor);
+        material.SetFloat("_ShadowPatternThreshold", shadowPatternThreshold);
+        material.SetFloat("_ShadowPatternSmoothness", shadowPatternSmoothness);
         material.SetFloat("_ShadowPatternScale", shadowPatternScale);
     }
 

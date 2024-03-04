@@ -30,7 +30,8 @@
 
     float4 _BaseTex_ST;
 
-    float _ShadowPatternFactor;
+    float _ShadowPatternThreshold;
+    float _ShadowPatternSmoothness;
     float _ShadowPatternScale;
     half3 _BrightCol;
     half3 _DarkCol;
@@ -129,7 +130,7 @@
 
         // SHADOW PATTERN // 
         float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
-        float shadowPattern_diff = step(shadowPattern * _ShadowPatternFactor, NoL01);
+        float shadowPattern_diff = smoothstep(shadowPattern * _ShadowPatternThreshold, shadowPattern * _ShadowPatternThreshold + _ShadowPatternSmoothness, NoL01);
 
         // DIFFUSE // 
         #ifdef _DIFFUSE
