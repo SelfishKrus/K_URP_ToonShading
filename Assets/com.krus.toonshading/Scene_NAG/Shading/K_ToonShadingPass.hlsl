@@ -129,8 +129,8 @@
         #endif
 
         // SHADOW PATTERN // 
-        float shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).r;
-        float shadowPattern_diff = smoothstep(shadowPattern * _ShadowPatternThreshold, shadowPattern * _ShadowPatternThreshold + _ShadowPatternSmoothness, NoL01);
+        float3 shadowPattern = SAMPLE_TEXTURE2D(_ShadowPatternTex, sampler_ShadowPatternTex, IN.uv3.xy * _ShadowPatternScale).rgb;
+        float shadowPattern_diff0 = smoothstep(shadowPattern.r * _ShadowPatternThreshold, shadowPattern.r * _ShadowPatternThreshold + _ShadowPatternSmoothness, NoL01);
 
         // DIFFUSE // 
         #ifdef _DIFFUSE
@@ -149,7 +149,7 @@
         #endif
 
         #ifdef _RECEIVE_SHADOWS
-            diffuse *= shadowPattern_diff;
+            diffuse *= (shadowPattern_diff0);
         #endif 
 
         // DIRECT LIGHT SPECULAR //

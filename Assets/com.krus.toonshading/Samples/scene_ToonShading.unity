@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PCF_Step: 2
   _camType: 0
-  lightCamDepthTex: {fileID: 1537960778}
+  lightCamDepthTex: {fileID: 811628188}
   _rtSize: 2048
   mainLight: {fileID: 1418099920}
   lightCamShadowBias: 0.1
@@ -260,7 +260,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 512
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 1537960778}
+  m_TargetTexture: {fileID: 811628188}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -931,7 +931,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -1086,6 +1086,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8351ae56f79f6a54a9194e0a939797e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!84 &811628188
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 2048
+  m_Height: 2048
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1283,8 +1320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9336ab63be00f3745beb29b159676ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shadowPatternFactor: 0.7
-  shadowPatternScale: 0.35
+  shadowPatternThreshold: 0.65
+  shadowPatternSmoothness: 0.2
+  shadowPatternScale: 0.33
   shadowCurve:
     serializedVersion: 2
     m_Curve:
@@ -1446,7 +1484,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9336ab63be00f3745beb29b159676ca2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shadowPatternFactor: 1
+  shadowPatternThreshold: 0.7
+  shadowPatternSmoothness: 0
   shadowPatternScale: 1
   shadowCurve:
     serializedVersion: 2
@@ -4626,43 +4665,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   renderTexture: {fileID: 0}
---- !u!84 &1537960778
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 2048
-  m_Height: 2048
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1615591834
 GameObject:
   m_ObjectHideFlags: 0
@@ -4941,7 +4943,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2014002571
 Transform:
   m_ObjectHideFlags: 0
@@ -4950,14 +4952,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014002570}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.3190087, y: -0.8669304, z: 0.2726456, w: 0.26894158}
-  m_LocalPosition: {x: -3.15, y: 1.471, z: -0.04}
+  m_LocalRotation: {x: -0.37968197, y: -0.15145302, z: -0.29722872, w: -0.86287814}
+  m_LocalPosition: {x: -3.15, y: 1.471, z: -0.03999999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2100915871}
   m_Father: {fileID: 347883950}
-  m_LocalEulerAnglesHint: {x: 17.526, y: 1302.177, z: 47.209}
+  m_LocalEulerAnglesHint: {x: 34.417, y: 1116.188, z: 49.57}
 --- !u!114 &2014002572
 MonoBehaviour:
   m_ObjectHideFlags: 0
