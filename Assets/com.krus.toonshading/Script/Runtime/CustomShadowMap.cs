@@ -24,6 +24,8 @@ public class CustomShadowMap : MonoBehaviour
         set { _camType = (CamType)value; }
     }
 
+    public float distanceFactor = 1.0f;
+
     // hide in inspector
     [HideInInspector]
     public RenderTexture lightCamDepthTex;
@@ -131,7 +133,7 @@ public class CustomShadowMap : MonoBehaviour
         Vector3 lightDir = mainLight.GetComponent<Light>().transform.forward;
         Vector3 maxDistance = new Vector3(bounds.extents.x, bounds.extents.y, bounds.extents.z);
         float length = maxDistance.magnitude;
-        pos = bounds.center - lightDir * length;
+        pos = bounds.center - lightDir * length * distanceFactor ;
         lightCam.transform.position = pos;
 
         // near plane and far plane
