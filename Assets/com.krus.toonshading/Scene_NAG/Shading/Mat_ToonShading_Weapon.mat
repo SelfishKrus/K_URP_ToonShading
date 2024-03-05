@@ -161,7 +161,7 @@ Material:
     - _RimSpecularSmoothness: 0.05
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
-    - _RimSpecularWidth: 1
+    - _RimSpecularWidth: 0.6
     - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0.5

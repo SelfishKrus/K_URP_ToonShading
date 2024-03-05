@@ -145,8 +145,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103157514}
-  m_LocalRotation: {x: 0.0036859107, y: 0.9940317, z: 0.10307169, w: -0.03554722}
-  m_LocalPosition: {x: 0, y: 0, z: 1.9358134}
+  m_LocalRotation: {x: 0.003685911, y: 0.9940317, z: 0.103071705, w: -0.035547215}
+  m_LocalPosition: {x: 0, y: 0, z: 1.9358139}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -172,7 +172,7 @@ MonoBehaviour:
   PCF_Step: 2
   _camType: 0
   distanceFactor: 1
-  lightCamDepthTex: {fileID: 137763805}
+  lightCamDepthTex: {fileID: 260264029}
   _rtSize: 2048
   mainLight: {fileID: 350244920}
   lightCamShadowBias: 0
@@ -252,16 +252,16 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 2.8486822
+  far clip plane: 2.8486826
   field of view: 94
   orthographic: 0
-  orthographic size: 1.5673878
+  orthographic size: 1.5673879
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 512
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 137763805}
+  m_TargetTexture: {fileID: 260264029}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -271,43 +271,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!84 &137763805
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 2048
-  m_Height: 2048
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &246384694
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,6 +423,43 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!84 &260264029
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 2048
+  m_Height: 2048
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &269361696
 GameObject:
   m_ObjectHideFlags: 0
@@ -3528,6 +3528,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 4220848493415178911, guid: e5310b062aaa5624d86b9b3f20d7e6ad,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7caed509d0b12d946a571a1d5d04becc, type: 2}
     - target: {fileID: 4237202722079907537, guid: e5310b062aaa5624d86b9b3f20d7e6ad,
         type: 3}
       propertyPath: m_Layer
@@ -3638,6 +3643,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5011113440557184041, guid: e5310b062aaa5624d86b9b3f20d7e6ad,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ce9919abde5b9df439580293295ca2cc, type: 2}
     - target: {fileID: 5018091953763376505, guid: e5310b062aaa5624d86b9b3f20d7e6ad,
         type: 3}
       propertyPath: m_Layer
@@ -3743,6 +3753,11 @@ PrefabInstance:
       propertyPath: m_UpdateWhenOffscreen
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5521986836702873816, guid: e5310b062aaa5624d86b9b3f20d7e6ad,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7caed509d0b12d946a571a1d5d04becc, type: 2}
     - target: {fileID: 5526001711216608626, guid: e5310b062aaa5624d86b9b3f20d7e6ad,
         type: 3}
       propertyPath: m_Layer
@@ -11148,7 +11163,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.5207282
+      time: 0.5013647
       value: 0.5042783
       inSlope: Infinity
       outSlope: Infinity
@@ -11157,7 +11172,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.73456997
+      time: 0.76228184
       value: 0.99370956
       inSlope: Infinity
       outSlope: Infinity
