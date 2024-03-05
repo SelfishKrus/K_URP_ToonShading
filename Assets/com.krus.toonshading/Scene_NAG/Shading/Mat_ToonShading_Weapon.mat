@@ -184,7 +184,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkCol: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissiveCol: {r: 0.36477977, g: 0, b: 0, a: 1}
+    - _EmissiveCol: {r: 0.18867922, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimSpecularCol: {r: 1, g: 0.9215687, b: 0.654902, a: 1}
     - _RimSpecularCol_Bright: {r: 1, g: 1, b: 1, a: 1}
