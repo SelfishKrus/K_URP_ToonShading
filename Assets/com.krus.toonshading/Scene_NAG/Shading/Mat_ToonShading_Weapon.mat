@@ -76,7 +76,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissiveTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: af8d3523f71a56d4ea6a24a78f01318f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _IlmTex:
@@ -157,19 +157,19 @@ Material:
     - _ReceiveShadows: 0
     - _RevertColor: 0
     - _RimSpecular: 1
-    - _RimSpecularDetail: 0.02
-    - _RimSpecularSmoothness: 0.05
+    - _RimSpecularDetail: 0.35
+    - _RimSpecularSmoothness: 0.1
     - _RimSpecularSwitch: 1
     - _RimSpecularThreshold: 0.35
-    - _RimSpecularWidth: 0.6
+    - _RimSpecularWidth: 1
     - _ShadowCurveRemap: 1
     - _ShadowSmoothness: 0
     - _ShadowThreshold: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSmoothness: 0.02
-    - _SpecularThreshold: 0.15
+    - _SpecularSmoothness: 0.05
+    - _SpecularThreshold: 0.1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
@@ -184,13 +184,13 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkCol: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EmissiveCol: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissiveCol: {r: 0.36477977, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimSpecularCol: {r: 1, g: 0.9215687, b: 0.654902, a: 1}
     - _RimSpecularCol_Bright: {r: 1, g: 1, b: 1, a: 1}
     - _RimSpecularCol_Dark: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _SpecularCol: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
+    - _SpecularCol: {r: 2.1185474, g: 2.1185474, b: 2.1185474, a: 1}
     - _Test: {r: 2, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

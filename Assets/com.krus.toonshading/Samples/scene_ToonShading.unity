@@ -145,8 +145,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103157514}
-  m_LocalRotation: {x: 0.003685911, y: 0.9940317, z: 0.103071705, w: -0.035547215}
-  m_LocalPosition: {x: 0, y: 0, z: 1.9358139}
+  m_LocalRotation: {x: -0.024451403, y: 0.966311, z: 0.10019859, w: 0.23580833}
+  m_LocalPosition: {x: 0, y: 0, z: 1.701411}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -154,7 +154,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.5226462, y: -1.1332386}
+  m_AnchoredPosition: {x: -4.657944, y: -1.1332442}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &103157516
@@ -172,9 +172,9 @@ MonoBehaviour:
   PCF_Step: 2
   _camType: 0
   distanceFactor: 1
-  lightCamDepthTex: {fileID: 260264029}
+  lightCamDepthTex: {fileID: 772477645}
   _rtSize: 2048
-  mainLight: {fileID: 350244920}
+  mainLight: {fileID: 1418099920}
   lightCamShadowBias: 0
 --- !u!114 &103157517
 MonoBehaviour:
@@ -252,16 +252,16 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 2.8486826
+  far clip plane: 3.6242886
   field of view: 94
   orthographic: 0
-  orthographic size: 1.5673879
+  orthographic size: 1.6486877
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 512
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 260264029}
+  m_TargetTexture: {fileID: 772477645}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -423,43 +423,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!84 &260264029
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 2048
-  m_Height: 2048
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &269361696
 GameObject:
   m_ObjectHideFlags: 0
@@ -907,13 +870,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350244917}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.28538722, y: -0.043004017, z: -0.41556817, w: 0.8625589}
+  m_LocalRotation: {x: -0.29585624, y: -0.0724226, z: -0.41206434, w: 0.8587357}
   m_LocalPosition: {x: 0.46166468, y: -0.57668555, z: -1.0759014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 710184270}
-  m_LocalEulerAnglesHint: {x: -31.875, y: -708.933, z: -54.618}
+  m_LocalEulerAnglesHint: {x: -34.598, y: -711.657, z: -53.871}
 --- !u!114 &350244919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1016,7 +979,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -1189,7 +1152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &710184270
 Transform:
   m_ObjectHideFlags: 0
@@ -1199,7 +1162,7 @@ Transform:
   m_GameObject: {fileID: 710184269}
   serializedVersion: 2
   m_LocalRotation: {x: -0.3645479, y: -0.902016, z: 0.20786811, w: 0.10130566}
-  m_LocalPosition: {x: -3.15, y: 1.471, z: -0.03999999}
+  m_LocalPosition: {x: -3.274, y: 1.135, z: 0.297}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1304,6 +1267,43 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!84 &772477645
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 6
+  m_Width: 2048
+  m_Height: 2048
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_UseDynamicScaleExplicit: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -11172,8 +11172,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.76228184
-      value: 0.99370956
+      time: 0.6626984
+      value: 0.96540767
       inSlope: Infinity
       outSlope: Infinity
       tangentMode: 1
@@ -11182,7 +11182,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 1
+      value: 0.9716981
       inSlope: 0
       outSlope: 0
       tangentMode: 0

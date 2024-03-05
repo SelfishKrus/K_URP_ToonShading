@@ -33,9 +33,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Intensity: 6
-    - _Stretch: 0.65
-    - _Threshold: 0.93
+    - _Intensity: 5
+    - _Stretch: 0.64
+    - _Threshold: 0.95
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

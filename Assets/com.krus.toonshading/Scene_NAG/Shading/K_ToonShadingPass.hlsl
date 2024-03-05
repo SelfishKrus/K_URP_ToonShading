@@ -162,7 +162,7 @@
             // Blinn-phong specular 
             half reflectivity = pow(NoH, _Glossiness) * specularMask;
             reflectivity = smoothstep(_SpecularThreshold - _SpecularSmoothness, _SpecularThreshold + _SpecularSmoothness, reflectivity);
-            half3 specular = reflectivity  * mainLight.color * _SpecularCol;
+            half3 specular = reflectivity  * mainLight.color * _SpecularCol * brdf.baseColor;
             // specular *= specularToggle;
         #else
             half3 specular = 0;
@@ -183,8 +183,10 @@
                 float linearDepth_offset = Linear01Depth(LoadSceneDepth(offsetUV_PS), _ZBufferParams);
                 float depthDiff = abs(linearDepth_offset - linearDepth);
                 half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness, depthDiff*NoL_VS);
+                rimSpecular *= brdf.baseColor;
             #else
                 half3 rimSpecular = _RimSpecularCol * smoothstep(_RimSpecularDetail, _RimSpecularDetail+_RimSpecularSmoothness,(1-saturate(NoV)) * NoL01 );
+                rimSpecular *= brdf.baseColor;
             #endif
         #else
             half3 rimSpecular = 0;
